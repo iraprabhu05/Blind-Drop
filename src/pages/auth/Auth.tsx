@@ -30,35 +30,30 @@ const Auth: React.FC = () => {
 
     const handleSendOtp = async (e: React.FormEvent, formType: 'login' | 'signup') => {
         e.preventDefault();
+        setError('');
+
         if (!email) {
-            setError('Please enter your email');
+            const msg = 'Please enter your email address.';
+            setError(msg);
+            toast.error(msg);
             return;
         }
-        if (formType === 'signup') {
-            if (!password || !confirmPassword) {
-                setError('Please fill in all fields');
-                return;
-            }
-            if (password !== confirmPassword) {
-                setError('Passwords do not match');
-                return;
-            }
-        } else { // login
-            if (!password) {
-                setError('Please enter your password');
-                return;
-            }
+
+        if (formType === 'login' && !password) {
+            const msg = 'Please enter your password.';
+            setError(msg);
+            toast.error(msg);
+            return;
         }
-        setError('');
+
         setIsLoading(true);
         toast.info('Sending OTP...');
-
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 1500));
 
         setIsLoading(false);
         setOtpSent(true);
-        toast.success('OTP sent to your email! (Use 123456)');
+        toast.success('OTP sent successfully!');
+        toast.info('For this demo, please use: 123456');
     };
 
     const handleResendOtp = (e: React.FormEvent, formType: 'login' | 'signup') => {
@@ -68,7 +63,8 @@ const Auth: React.FC = () => {
 
     const handleVerify = (e: React.FormEvent, formType: 'login' | 'signup') => {
         e.preventDefault();
-        // In a real app, you would verify the OTP on the backend.
+        setError(''); 
+        
         if (otp === '123456') {
             setIsVerified(true);
             toast.success('Email verified successfully!');
@@ -77,22 +73,29 @@ const Auth: React.FC = () => {
                 navigate(`/dashboard/${userType}`);
             }
         } else {
-            setError('Invalid OTP. Please try again.');
-            toast.error('Invalid OTP');
+            const msg = 'Invalid OTP. Please try again.';
+            setError(msg);
+            toast.error(msg);
         }
     };
     
     const handleSignup = (e: React.FormEvent) => {
         e.preventDefault();
+        setError('');
         if (!email || !password || !confirmPassword) {
-            setError('Please fill in all fields');
+            const msg = 'Please fill in all fields';
+            setError(msg);
+            toast.error(msg);
             return;
         }
         if (password !== confirmPassword) {
-            setError('Passwords do not match');
+            const msg = 'Passwords do not match';
+            setError(msg);
+            toast.error(msg);
             return;
         }
-        setError('');
+        
+        toast.success('Account created successfully!')
         login(userType);
         navigate(`/dashboard/${userType}`);
     };
@@ -105,26 +108,33 @@ const Auth: React.FC = () => {
         setOtp('');
         setOtpSent(false);
         setIsVerified(false);
-    }
+    };
 
-    const UserTypeSelector = ({ formType }: { formType: 'login' | 'signup' }) => (
-        <RadioGroup value={userType} onValueChange={(v) => setUserType(v as 'user' | 'artist')} className="grid grid-cols-2 gap-4">
+    const UserTypeSelector = ({ formType, disabled }: { formType: 'login' | 'signup', disabled?: boolean }) => (
+        <RadioGroup 
+            value={userType} 
+            onValueChange={(v) => setUserType(v as 'user' | 'artist')} 
+            className="grid grid-cols-2 gap-4"
+            disabled={disabled}
+        >
             <div>
-                <RadioGroupItem value="user" id={`user-${formType}`} className="peer sr-only" />
+                <RadioGroupItem value="user" id={`user-${formType}`} className="peer sr-only" disabled={disabled}/>
                 <Label htmlFor={`user-${formType}`} className={cn(
                     "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground",
-                    userType === 'user' && "border-neon-teal"
+                    userType === 'user' && "border-neon-teal",
+                    disabled && "cursor-not-allowed opacity-50"
                 )}>User</Label>
             </div>
             <div>
-                <RadioGroupItem value="artist" id={`artist-${formType}`} className="peer sr-only" />
+                <RadioGroupItem value="artist" id={`artist-${formType}`} className="peer sr-only" disabled={disabled}/>
                 <Label htmlFor={`artist-${formType}`} className={cn(
                     "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground",
-                    userType === 'artist' && "border-neon-violet"
+                    userType === 'artist' && "border-neon-violet",
+                    disabled && "cursor-not-allowed opacity-50"
                 )}>Artist</Label>
             </div>
         </RadioGroup>
-    )
+    );
 
     return (
         <AuthLayout>
@@ -137,12 +147,10 @@ const Auth: React.FC = () => {
                     <Card className={cn("border-2", userType === 'user' ? "border-neon-teal/30" : "border-neon-violet/30")}>
                         <CardHeader className="text-center">
                             <CardTitle>Welcome Back!</CardTitle>
-                            <CardDescription>
-                                Select your role and enter your details to login.
-                            </CardDescription>
+                            <CardDescription>Select your role and enter your details to login.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <UserTypeSelector formType="login"/>
+                            <UserTypeSelector formType="login" disabled={otpSent}/>
                             <div className="space-y-2">
                                 <Label htmlFor="email-login">Email</Label>
                                 <Input id="email-login" type="email" placeholder="email@example.com" value={email} onChange={(e) => setEmail(e.target.value)} disabled={otpSent}/>
@@ -175,7 +183,7 @@ const Auth: React.FC = () => {
                         </CardContent>
                         <CardFooter>
                              {!otpSent ? (
-                                <Button onClick={(e) => handleSendOtp(e, 'login')} className="w-full" disabled={isLoading}>{isLoading ? 'Sending...' : 'Send OTP'}</Button>
+                                <Button onClick={(e) => handleSendOtp(e, 'login')} className="w-full" disabled={isLoading}>{isLoading ? 'Sending...' : 'Send OTP & Login'}</Button>
                             ) : (
                                 <Button onClick={(e) => handleVerify(e, 'login')} className="w-full">Verify & Login</Button>
                             )}
@@ -187,64 +195,28 @@ const Auth: React.FC = () => {
                          <CardHeader className="text-center">
                             <CardTitle>Create an Account</CardTitle>
                             <CardDescription>
-                                {isVerified ? 'You are verified! Fill in your details to create an account.' : 'Select your role and enter your details to sign up.'}
+                                Select your role and enter your details to sign up.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            {!isVerified && (
-                                <>
-                                    <UserTypeSelector formType="signup" />
-                                    <div className="space-y-2">
-                                        <Label htmlFor="email-signup">Email</Label>
-                                        <Input id="email-signup" type="email" placeholder="email@example.com" value={email} onChange={(e) => setEmail(e.target.value)} disabled={otpSent} />
-                                    </div>
-                                </>
-                            )}
-                           
-                            {otpSent && !isVerified && (
-                                <div className="space-y-2">
-                                    <Label htmlFor="otp-signup">Enter OTP</Label>
-                                    <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-                                        <InputOTPGroup>
-                                            <InputOTPSlot index={0} />
-                                            <InputOTPSlot index={1} />
-                                            <InputOTPSlot index={2} />
-                                        </InputOTPGroup>
-                                        <InputOTPSeparator />
-                                        <InputOTPGroup>
-                                            <InputOTPSlot index={3} />
-                                            <InputOTPSlot index={4} />
-                                            <InputOTPSlot index={5} />
-                                        </InputOTPGroup>
-                                    </InputOTP>
-                                     <Button variant="link" onClick={(e) => handleResendOtp(e, 'signup')} className="p-0">Resend OTP</Button>
-                                </div>
-                            )}
-                            {isVerified && (
-                                <>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="password-signup">Password</Label>
-                                        <Input id="password-signup" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                                        <PasswordStrength password={password} />
-                                    </div>
-                                     <div className="space-y-2">
-                                        <Label htmlFor="confirm-password-signup">Confirm Password</Label>
-                                        <Input id="confirm-password-signup" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                                    </div>
-                                </> 
-                            )}
+                            <UserTypeSelector formType="signup" />
+                            <div className="space-y-2">
+                                <Label htmlFor="email-signup">Email</Label>
+                                <Input id="email-signup" type="email" placeholder="email@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="password-signup">Password</Label>
+                                <Input id="password-signup" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                                <PasswordStrength password={password} />
+                            </div>
+                             <div className="space-y-2">
+                                <Label htmlFor="confirm-password-signup">Confirm Password</Label>
+                                <Input id="confirm-password-signup" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                            </div>
                             {error && <p className="text-red-400 text-sm text-center">{error}</p>}
                         </CardContent>
                         <CardFooter>
-                            {!otpSent && (
-                                <Button onClick={(e) => handleSendOtp(e, 'signup')} className="w-full" disabled={isLoading}>{isLoading ? 'Sending...' : 'Send OTP'}</Button>
-                            )}
-                            {otpSent && !isVerified && (
-                                <Button onClick={(e) => handleVerify(e, 'signup')} className="w-full">Verify Email</Button>
-                            )}
-                            {isVerified && (
-                                <Button onClick={handleSignup} className="w-full">Create Account</Button>
-                            )}
+                            <Button onClick={handleSignup} className="w-full">Create Account</Button>
                         </CardFooter>
                     </Card>
                 </TabsContent>
