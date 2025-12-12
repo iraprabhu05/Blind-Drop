@@ -14,7 +14,7 @@ import NotFound from "./pages/NotFound";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Auth from "./pages/auth/Auth";
 import UserDashboard from "./pages/dashboards/UserDashboard";
-import ArtistDashboard from "./pages/dashboards/ArtistDashboard";
+import ArtistDashboard from "./components/dashboards/ArtistDashboard/ArtistDashboard";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -35,7 +35,7 @@ const AppRoutes = () => {
                 <Route path="/dashboard/user" element={<UserDashboard />} />
             </Route>
             <Route element={<ProtectedRoute allowedUserType='artist' />}>
-                <Route path="/dashboard/artist" element={<ArtistDashboard />} />
+                <Route path="/dashboard/artist/*" element={<ArtistDashboard />} />
             </Route>
             <Route path="*" element={<NotFound />} />
         </Routes>
