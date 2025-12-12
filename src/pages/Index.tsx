@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background overflow-hidden relative">
+    <div className="min-h-screen bg-background relative">
       {/* Background gradient */}
       <div className="fixed inset-0 bg-gradient-radial from-charcoal via-background to-background" />
       
@@ -24,7 +24,7 @@ const Index = () => {
       <Navigation />
 
       {/* Main content */}
-      <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 pt-24">
+      <main className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 pt-24 pb-24">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
           {/* Animated glow ring */}
           <div className="relative mb-8 animate-fade-in">
