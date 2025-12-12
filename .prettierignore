@@ -1,0 +1,8 @@
+node_modules
+dist
+build
+server
+package-lock.json
+bun.lockb
+tailwind.config.ts
+vite.config.ts
