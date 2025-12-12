@@ -41,7 +41,7 @@ const Listen = () => {
     const handleEnded = () => setIsPlaying(false);
 
     // ERROR HANDLER (Crucial for debugging)
-    const handleError = (e: any) => {
+    const handleError = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
       console.error("Audio Load Error:", e);
       setAudioError(true);
       setIsPlaying(false);
@@ -51,13 +51,13 @@ const Listen = () => {
     audio.addEventListener("timeupdate", updateTime);
     audio.addEventListener("loadedmetadata", updateDuration);
     audio.addEventListener("ended", handleEnded);
-    audio.addEventListener("error", handleError);
+    audio.addEventListener("error", handleError as any);
 
     return () => {
       audio.removeEventListener("timeupdate", updateTime);
       audio.removeEventListener("loadedmetadata", updateDuration);
       audio.removeEventListener("ended", handleEnded);
-      audio.removeEventListener("error", handleError);
+      audio.removeEventListener("error", handleError as any);
       audio.pause();
     };
   }, [currentSong]);
@@ -100,7 +100,7 @@ const Listen = () => {
       audioRef.current
         .play()
         .catch((e) => console.error("Auto-play failed:", e));
-  }, [currentSong]);
+  }, [currentSong, isPlaying]);
 
   // --- HANDLERS ---
   const handleRate = async (star: number) => {

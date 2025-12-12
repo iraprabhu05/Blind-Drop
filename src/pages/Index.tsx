@@ -1,11 +1,32 @@
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { GlowRing } from "@/components/GlowRing";
 import { Particles } from "@/components/Particles";
 import { Navigation } from "@/components/Navigation";
+import { ArtistsNearYouPreview } from "@/components/ArtistsNearYouPreview";
+import MusicPlayerBar from '@/components/dashboards/UserDashboard/MusicPlayerBar';
 import { Play, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Index = () => {
+  const [currentSong, setCurrentSong] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handlePlayUrl = (songUrl, artist) => {
+    const song = {
+      url: songUrl,
+      title: artist.name,
+      artist: artist.genre,
+      cover: artist.avatarUrl,
+    };
+    setCurrentSong(song);
+    setIsPlaying(true);
+  };
+
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying);
+  };
+
   return (
     <div className="min-h-screen bg-background relative">
       {/* Background gradient */}
@@ -91,10 +112,20 @@ const Index = () => {
             ))}
           </div>
         </div>
+        <ArtistsNearYouPreview playSong={handlePlayUrl} />
       </main>
 
       {/* Bottom gradient fade */}
       <div className="fixed bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+
+      {/* Music Player */}
+      <MusicPlayerBar 
+        song={currentSong} 
+        isPlaying={isPlaying} 
+        onPlayPause={handlePlayPause}
+        onNext={() => {}} // Not implemented for landing page
+        onPrev={() => {}} // Not implemented for landing page
+      />
     </div>
   );
 };

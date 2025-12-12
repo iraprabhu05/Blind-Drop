@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { LogOut } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -10,27 +9,28 @@ import PlaylistQuickAccess from '../../components/dashboards/UserDashboard/Playl
 import MusicPlayerBar from '../../components/dashboards/UserDashboard/MusicPlayerBar';
 import CreatePlaylistDialog from '../../components/dashboards/UserDashboard/CreatePlaylistDialog';
 import { Button } from '../../components/ui/button';
+import { NearbyArtistsSection } from '@/components/NearbyArtistsSection';
 
 // Mock Data
 const recommendedSongs = [
-  { id: 1, title: 'Mirage', artist: 'Stylo', cover: 'https://placehold.co/300x300/1a1a1a/ffffff?text=Mirage' },
-  { id: 2, title: 'Odyssey', artist: 'A.L.I.S.O.N', cover: 'https://placehold.co/300x300/1a1a1a/ffffff?text=Odyssey' },
-  { id: 3, title: 'Nightcall', artist: 'Kavinsky', cover: 'https://placehold.co/300x300/1a1a1a/ffffff?text=Nightcall' },
-  { id: 4, title: 'Genesis', artist: 'Justice', cover: 'https://placehold.co/300x300/1a1a1a/ffffff?text=Genesis' },
-  { id: 5, title: 'Hotline', artist: 'Jasper Byrne', cover: 'https://placehold.co/300x300/1a1a1a/ffffff?text=Hotline' },
+  { id: 1, title: 'Mirage', artist: 'Stylo', cover: 'https://placehold.co/300x300/1a1a1a/ffffff?text=Mirage', url: 'https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3' },
+  { id: 2, title: 'Odyssey', artist: 'A.L.I.S.O.N', cover: 'https://placehold.co/300x300/1a1a1a/ffffff?text=Odyssey', url: 'https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3' },
+  { id: 3, title: 'Nightcall', artist: 'Kavinsky', cover: 'https://placehold.co/300x300/1a1a1a/ffffff?text=Nightcall', url: 'https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3' },
+  { id: 4, title: 'Genesis', artist: 'Justice', cover: 'https://placehold.co/300x300/1a1a1a/ffffff?text=Genesis', url: 'https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3' },
+  { id: 5, title: 'Hotline', artist: 'Jasper Byrne', cover: 'https://placehold.co/300x300/1a1a1a/ffffff?text=Hotline', url: 'https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3' },
 ];
 
 const favoriteSongs = [
-  { id: 6, title: 'Resonance', artist: 'Home', cover: 'https://placehold.co/100x100/1a1a1a/ffffff?text=Resonance' },
-  { id: 7, title: 'Crystals', artist: 'M.O.O.N.', cover: 'https://placehold.co/100x100/1a1a1a/ffffff?text=Crystals' },
-  { id: 8, title: 'Voyager', artist: 'Daft Punk', cover: 'https://placehold.co/100x100/1a1a1a/ffffff?text=Voyager' },
+  { id: 6, title: 'Resonance', artist: 'Home', cover: 'https://placehold.co/100x100/1a1a1a/ffffff?text=Resonance', url: 'https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3' },
+  { id: 7, title: 'Crystals', artist: 'M.O.O.N.', cover: 'https://placehold.co/100x100/1a1a1a/ffffff?text=Crystals', url: 'https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3' },
+  { id: 8, title: 'Voyager', artist: 'Daft Punk', cover: 'https://placehold.co/100x100/1a1a1a/ffffff?text=Voyager', url: 'https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3' },
 ];
 
 const recentlyPlayedSongs = [
-    { id: 9, title: 'Turbo Killer', artist: 'Carpenter Brut', cover: 'https://placehold.co/200x200/1a1a1a/ffffff?text=Turbo+Killer' },
-    { id: 10, title: 'Technoir', artist: 'Perturbator', cover: 'https://placehold.co/200x200/1a1a1a/ffffff?text=Technoir' },
-    { id: 11, title: 'Miami Disco', artist: 'Miami Nights 1984', cover: 'https://placehold.co/200x200/1a1a1a/ffffff?text=Miami+Disco' },
-    { id: 12, title: 'Sunset', artist: 'The Midnight', cover: 'https://placehold.co/200x200/1a1a1a/ffffff?text=Sunset' },
+    { id: 9, title: 'Turbo Killer', artist: 'Carpenter Brut', cover: 'https://placehold.co/200x200/1a1a1a/ffffff?text=Turbo+Killer', url: 'https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3' },
+    { id: 10, title: 'Technoir', artist: 'Perturbator', cover: 'https://placehold.co/200x200/1a1a1a/ffffff?text=Technoir', url: 'https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3' },
+    { id: 11, title: 'Miami Disco', artist: 'Miami Nights 1984', cover: 'https://placehold.co/200x200/1a1a1a/ffffff?text=Miami+Disco', url: 'https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3' },
+    { id: 12, title: 'Sunset', artist: 'The Midnight', cover: 'https://placehold.co/200x200/1a1a1a/ffffff?text=Sunset', url: 'https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3' },
 ];
 
 const genres = ['Synthwave', 'Retrowave', 'Vaporwave', 'Chillwave', 'Darkwave', 'Cyberpunk'];
@@ -52,6 +52,17 @@ const UserDashboard = () => {
     const handlePlay = (song) => {
         setCurrentSong(song);
         setIsPlaying(true);
+    };
+    
+    const handlePlayUrl = (songUrl, artist) => {
+      const song = {
+        url: songUrl,
+        title: artist.name,
+        artist: artist.genre,
+        cover: artist.avatarUrl,
+      };
+      setCurrentSong(song);
+      setIsPlaying(true);
     };
 
     const handlePlayPause = () => {
@@ -108,6 +119,7 @@ const UserDashboard = () => {
                 <FavoritesPanel songs={favoriteSongs} onPlay={handlePlay}/>
               </div>
           </div>
+           <NearbyArtistsSection playSong={(songUrl, artist) => handlePlayUrl(songUrl, artist)} />
           <GenreTags genres={genres} />
           <PlaylistQuickAccess playlists={playlists} onCreatePlaylist={() => setCreatePlaylistOpen(true)} />
         </main>
