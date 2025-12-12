@@ -55,18 +55,18 @@ const Auth: React.FC = () => {
         setError('');
     }
 
-    const UserTypeSelector = () => (
-        <RadioGroup defaultValue="user" onValueChange={(v) => setUserType(v as 'user' | 'artist')} className="grid grid-cols-2 gap-4">
+    const UserTypeSelector = ({ formType }: { formType: 'login' | 'signup' }) => (
+        <RadioGroup value={userType} onValueChange={(v) => setUserType(v as 'user' | 'artist')} className="grid grid-cols-2 gap-4">
             <div>
-                <RadioGroupItem value="user" id="user-login" className="peer sr-only" />
-                <Label htmlFor="user-login" className={cn(
+                <RadioGroupItem value="user" id={`user-${formType}`} className="peer sr-only" />
+                <Label htmlFor={`user-${formType}`} className={cn(
                     "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground",
                     userType === 'user' && "border-neon-teal"
                 )}>User</Label>
             </div>
             <div>
-                <RadioGroupItem value="artist" id="artist-login" className="peer sr-only" />
-                <Label htmlFor="artist-login" className={cn(
+                <RadioGroupItem value="artist" id={`artist-${formType}`} className="peer sr-only" />
+                <Label htmlFor={`artist-${formType}`} className={cn(
                     "flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground",
                     userType === 'artist' && "border-neon-violet"
                 )}>Artist</Label>
@@ -90,7 +90,7 @@ const Auth: React.FC = () => {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <UserTypeSelector/>
+                            <UserTypeSelector formType="login"/>
                             <div className="space-y-2">
                                 <Label htmlFor="email-login">Email</Label>
                                 <Input id="email-login" type="email" placeholder="email@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -115,7 +115,7 @@ const Auth: React.FC = () => {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <UserTypeSelector/>
+                            <UserTypeSelector formType="signup" />
                             <div className="space-y-2">
                                 <Label htmlFor="email-signup">Email</Label>
                                 <Input id="email-signup" type="email" placeholder="email@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
