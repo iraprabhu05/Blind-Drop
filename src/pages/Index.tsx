@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { GlowRing } from "@/components/GlowRing";
@@ -111,6 +112,24 @@ const Index = () => {
               </div>
             ))}
           </div>
+            <div className="mt-16 w-full max-w-3xl mx-auto opacity-0 animate-fade-in animation-delay-600">
+                <Link to="/reality-wrapped">
+                    <div className="bg-card/60 backdrop-blur-xl border border-border/30 rounded-lg p-6 shadow-neon-combined hover:shadow-neon-violet-strong transition-shadow duration-300">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h2 className="text-2xl font-bold text-foreground mb-2"> Reality Check Wrapped (Demo)</h2>
+                                <p className="text-muted-foreground">See how your blind ratings reveal your true taste.</p>
+                            </div>
+                            <div className="relative">
+                                <GlowRing size="sm" animate />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <Sparkles className="w-6 h-6 text-neon-violet" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </Link>
+            </div>
         </div>
         <ArtistsNearYouPreview playSong={handlePlayUrl} />
       </main>

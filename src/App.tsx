@@ -16,6 +16,7 @@ import Auth from "./pages/auth/Auth";
 import UserDashboard from "./pages/dashboards/UserDashboard";
 import ArtistDashboard from "./components/dashboards/ArtistDashboard/ArtistDashboard";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import RealityWrapped from "./pages/RealityWrapped";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const AppRoutes = () => {
             <Route path="/upload" element={<Upload />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/reality-wrapped" element={<RealityWrapped />} />
             <Route element={<ProtectedRoute allowedUserType='user' />}>
                 <Route path="/dashboard/user" element={<UserDashboard />} />
             </Route>
