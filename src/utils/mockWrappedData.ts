@@ -1,4 +1,3 @@
-
 export const mockWrappedData = {
   ratingComparison: {
     blindVoted: 78,
@@ -28,7 +27,7 @@ export const mockWrappedData = {
   },
   surpriseFavorites: [
     { id: '1', title: 'Starlight Echo', artist: 'Unknown', albumArt: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop' },
-    { id: '2', title: 'Midnight City Drive', artist: 'Unknown', albumArt: 'https://images.unsplash.com/photo-1510915361408-d5a637482857?w=300&h=300&fit=crop' },
+    { id: '2', title: 'Midnight City Drive', artist: 'Unknown', albumArt: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=300&fit=crop' },
     { id: '3', title: 'Lost in the Sound', artist: 'Unknown', albumArt: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300&h=300&fit=crop' },
   ],
   gamifiedStats: {
