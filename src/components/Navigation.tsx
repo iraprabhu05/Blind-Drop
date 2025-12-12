@@ -1,12 +1,22 @@
+
 import { cn } from "@/lib/utils";
-import { Headphones, User, Upload, Disc3 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Headphones, User, Upload, Disc3, LogOut, LayoutDashboard } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { Button } from "./ui/button";
 
 export const Navigation = () => {
   const location = useLocation();
-  
+  const navigate = useNavigate();
+  const { isLoggedIn, userType, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  }
+
   const links = [
-    { href: "/", icon: Disc3, label: "Discover" },
+    { href: "/discover", icon: Disc3, label: "Discover" },
     { href: "/upload", icon: Upload, label: "Upload" },
     { href: "/profile", icon: User, label: "Profile" },
   ];
@@ -26,26 +36,51 @@ export const Navigation = () => {
             </span>
           </Link>
 
-          {/* Nav Links */}
-          <div className="flex items-center gap-2">
-            {links.map((link) => {
-              const isActive = location.pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className={cn(
-                    "flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 font-ui text-sm",
-                    isActive 
-                      ? "bg-primary/20 text-primary shadow-neon border border-primary/30" 
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                  )}
-                >
-                  <link.icon className="w-4 h-4" />
-                  <span className="hidden sm:inline">{link.label}</span>
+          {/* Nav Links & Auth */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+                {links.map((link) => {
+                  const isActive = location.pathname === link.href;
+                  return (
+                    <Link
+                      key={link.href}
+                      to={link.href}
+                      className={cn(
+                        "flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 font-ui text-sm",
+                        isActive
+                          ? "bg-primary/20 text-primary shadow-neon border border-primary/30"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      )}
+                    >
+                      <link.icon className="w-4 h-4" />
+                      <span className="hidden sm:inline">{link.label}</span>
+                    </Link>
+                  );
+                })}
+            </div>
+
+            <div className="h-6 w-px bg-border/40"></div>
+
+            {isLoggedIn ? (
+              <div className="flex items-center gap-2">
+                <Link to={`/dashboard/${userType}`}>
+                  <Button variant="ghost_neon" size="sm">
+                    <LayoutDashboard className="w-4 h-4 mr-2" />
+                    Dashboard
+                  </Button>
                 </Link>
-              );
-            })}
+                <Button onClick={handleLogout} variant="primary" size="sm">
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link to="/auth">
+                  <Button variant="primary" size="sm">Get Started</Button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
