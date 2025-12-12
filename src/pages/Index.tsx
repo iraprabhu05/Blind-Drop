@@ -1,11 +1,10 @@
-
-import { useState } from 'react';
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { GlowRing } from "@/components/GlowRing";
 import { Particles } from "@/components/Particles";
 import { Navigation } from "@/components/Navigation";
 import { ArtistsNearYouPreview } from "@/components/ArtistsNearYouPreview";
-import MusicPlayerBar from '@/components/dashboards/UserDashboard/MusicPlayerBar';
+import MusicPlayerBar from "@/components/dashboards/UserDashboard/MusicPlayerBar";
 import { Play, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -32,7 +31,7 @@ const Index = () => {
     <div className="min-h-screen bg-background relative">
       {/* Background gradient */}
       <div className="fixed inset-0 bg-gradient-radial from-charcoal via-background to-background" />
-      
+
       {/* Subtle gradient waves */}
       <div className="fixed inset-0 opacity-30">
         <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-neon-violet/10 rounded-full blur-[120px]" />
@@ -76,8 +75,8 @@ const Index = () => {
 
           {/* Subheading */}
           <p className="text-lg sm:text-xl text-muted-foreground max-w-xl mb-10 leading-relaxed opacity-0 animate-fade-in animation-delay-400">
-            Discover music purely by sound. No names, no biases. 
-            Just you and the music, waiting to be revealed.
+            Discover music purely by sound. No names, no biases. Just you and
+            the music, waiting to be revealed.
           </p>
 
           {/* CTA Buttons */}
@@ -112,24 +111,29 @@ const Index = () => {
               </div>
             ))}
           </div>
-            <div className="mt-16 w-full max-w-3xl mx-auto opacity-0 animate-fade-in animation-delay-600">
-                <Link to="/reality-wrapped">
-                    <div className="bg-card/60 backdrop-blur-xl border border-border/30 rounded-lg p-6 shadow-neon-combined hover:shadow-neon-violet-strong transition-shadow duration-300">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <h2 className="text-2xl font-bold text-foreground mb-2"> Reality Check Wrapped (Demo)</h2>
-                                <p className="text-muted-foreground">See how your blind ratings reveal your true taste.</p>
-                            </div>
-                            <div className="relative">
-                                <GlowRing size="sm" animate />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <Sparkles className="w-6 h-6 text-neon-violet" />
-                                </div>
-                            </div>
-                        </div>
+          <div className="mt-16 w-full max-w-3xl mx-auto opacity-0 animate-fade-in animation-delay-600">
+            <Link to="/reality-wrapped">
+              <div className="bg-card/60 backdrop-blur-xl border border-border/30 rounded-lg p-6 shadow-neon-combined hover:shadow-neon-violet-strong transition-shadow duration-300">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold text-foreground mb-2">
+                      {" "}
+                      Reality Check Wrapped (Demo)
+                    </h2>
+                    <p className="text-muted-foreground">
+                      See how your blind ratings reveal your true taste.
+                    </p>
+                  </div>
+                  <div className="relative">
+                    <GlowRing size="sm" animate />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Sparkles className="w-6 h-6 text-neon-violet" />
                     </div>
-                </Link>
-            </div>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </div>
         </div>
         <ArtistsNearYouPreview playSong={handlePlayUrl} />
       </main>
@@ -138,9 +142,9 @@ const Index = () => {
       <div className="fixed bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
 
       {/* Music Player */}
-      <MusicPlayerBar 
-        song={currentSong} 
-        isPlaying={isPlaying} 
+      <MusicPlayerBar
+        song={currentSong}
+        isPlaying={isPlaying}
         onPlayPause={handlePlayPause}
         onNext={() => {}} // Not implemented for landing page
         onPrev={() => {}} // Not implemented for landing page

@@ -5,10 +5,13 @@ interface RadiusFilterProps {
   onRadiusChange: (radius: number) => void;
 }
 
-export const RadiusFilter = ({ selectedRadius, onRadiusChange }: RadiusFilterProps) => {
+export const RadiusFilter = ({
+  selectedRadius,
+  onRadiusChange,
+}: RadiusFilterProps) => {
   return (
-    <ToggleGroup 
-      type="single" 
+    <ToggleGroup
+      type="single"
       defaultValue={String(selectedRadius)}
       onValueChange={(value) => {
         if (value) {

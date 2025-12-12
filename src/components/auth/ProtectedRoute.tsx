@@ -1,10 +1,9 @@
-
-import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface ProtectedRouteProps {
-  allowedUserType: 'user' | 'artist';
+  allowedUserType: "user" | "artist";
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedUserType }) => {

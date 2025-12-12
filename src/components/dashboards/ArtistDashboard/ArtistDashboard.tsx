@@ -1,13 +1,12 @@
-
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Sidebar from './Sidebar';
-import Overview from './Overview';
-import MyTracks from './MyTracks';
-import UploadTrack from './UploadTrack';
-import Analytics from './Analytics';
-import Profile from './Profile';
-import { Toaster } from '@/components/ui/sonner';
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Sidebar from "./Sidebar";
+import Overview from "./Overview";
+import MyTracks from "./MyTracks";
+import UploadTrack from "./UploadTrack";
+import Analytics from "./Analytics";
+import Profile from "./Profile";
+import { Toaster } from "@/components/ui/sonner";
 
 const ArtistDashboard = () => {
   return (

@@ -1,7 +1,14 @@
 import { Navigation } from "@/components/Navigation";
 import { Particles } from "@/components/Particles";
 import { Button } from "@/components/ui/button";
-import { Music, Headphones, Star, TrendingUp, Settings, LogOut } from "lucide-react";
+import {
+  Music,
+  Headphones,
+  Star,
+  TrendingUp,
+  Settings,
+  LogOut,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const stats = [
@@ -25,7 +32,7 @@ const Profile = () => {
       <div className="fixed inset-0 opacity-15">
         <div className="absolute top-1/4 right-0 w-1/2 h-1/2 bg-neon-violet/20 rounded-full blur-[150px]" />
       </div>
-      
+
       <Particles count={15} />
       <Navigation />
 
@@ -36,7 +43,9 @@ const Profile = () => {
             {/* Avatar */}
             <div className="relative">
               <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-neon-violet/30 to-neon-teal/30 flex items-center justify-center border-2 border-border/30">
-                <span className="font-heading text-3xl font-bold text-gradient">AW</span>
+                <span className="font-heading text-3xl font-bold text-gradient">
+                  AW
+                </span>
               </div>
               <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-mint flex items-center justify-center">
                 <span className="text-xs">✓</span>
@@ -67,7 +76,7 @@ const Profile = () => {
           {/* Stats grid */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
             {stats.map((stat, index) => (
-              <div 
+              <div
                 key={stat.label}
                 className={cn(
                   "glass-panel p-6 rounded-2xl text-center opacity-0 animate-fade-in",
@@ -87,10 +96,12 @@ const Profile = () => {
 
           {/* Recent tracks */}
           <div className="opacity-0 animate-fade-in animation-delay-500">
-            <h2 className="font-heading text-xl font-semibold mb-6">Your Tracks</h2>
+            <h2 className="font-heading text-xl font-semibold mb-6">
+              Your Tracks
+            </h2>
             <div className="space-y-3">
               {recentTracks.map((track, index) => (
-                <div 
+                <div
                   key={track.title}
                   className="glass-panel p-4 rounded-xl flex items-center gap-4 hover:shadow-neon transition-all duration-300"
                 >
@@ -98,14 +109,18 @@ const Profile = () => {
                     <Music className="w-6 h-6 text-foreground/60" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-medium text-foreground">{track.title}</h3>
+                    <h3 className="font-medium text-foreground">
+                      {track.title}
+                    </h3>
                     <p className="text-sm text-muted-foreground font-ui">
                       {track.plays} blind listens
                     </p>
                   </div>
                   <div className="flex items-center gap-1 text-sm">
                     <Star className="w-4 h-4 text-neon-violet fill-neon-violet" />
-                    <span className="text-foreground font-medium">{track.rating}</span>
+                    <span className="text-foreground font-medium">
+                      {track.rating}
+                    </span>
                   </div>
                 </div>
               ))}

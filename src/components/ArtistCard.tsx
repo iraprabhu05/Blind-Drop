@@ -1,5 +1,11 @@
 import { Artist } from "@/utils/mockArtists";
-import { Card, CardContent, CardFooter, CardTitle, CardDescription } from "./ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+} from "./ui/card";
 import { Button } from "./ui/button";
 import { PlayIcon } from "@heroicons/react/24/solid";
 import { cn } from "@/lib/utils";
@@ -27,8 +33,12 @@ export const ArtistCard = ({ artist, playSong }: ArtistCardProps) => {
             <PlayIcon className="h-6 w-6 text-primary-foreground" />
           </Button>
         </div>
-        <CardTitle className="text-lg font-bold truncate">{artist.name}</CardTitle>
-        <CardDescription className="text-sm text-muted-foreground">{artist.genre}</CardDescription>
+        <CardTitle className="text-lg font-bold truncate">
+          {artist.name}
+        </CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
+          {artist.genre}
+        </CardDescription>
         {artist.distance && (
           <p className="text-xs text-muted-foreground mt-2">
             {artist.distance.toFixed(2)} km away

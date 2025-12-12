@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -46,14 +46,23 @@
     --success-mint: 160 85% 62%;
 
     /* Gradients */
-    --gradient-neon: linear-gradient(135deg, hsl(var(--neon-violet)), hsl(var(--teal-glow)));
+    --gradient-neon: linear-gradient(
+      135deg,
+      hsl(var(--neon-violet)),
+      hsl(var(--teal-glow))
+    );
     --gradient-dark: linear-gradient(180deg, hsl(220 25% 8%), hsl(220 25% 4%));
-    --gradient-glass: linear-gradient(135deg, hsl(220 20% 15% / 0.6), hsl(220 20% 10% / 0.4));
-    
+    --gradient-glass: linear-gradient(
+      135deg,
+      hsl(220 20% 15% / 0.6),
+      hsl(220 20% 10% / 0.4)
+    );
+
     /* Glows */
     --glow-violet: 0 0 40px hsl(263 100% 67% / 0.4);
     --glow-teal: 0 0 40px hsl(174 70% 52% / 0.4);
-    --glow-combined: 0 0 60px hsl(263 100% 67% / 0.3), 0 0 100px hsl(174 70% 52% / 0.2);
+    --glow-combined:
+      0 0 60px hsl(263 100% 67% / 0.3), 0 0 100px hsl(174 70% 52% / 0.2);
 
     --sidebar-background: 220 25% 6%;
     --sidebar-foreground: 0 0% 91%;
@@ -95,11 +104,16 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Poppins', sans-serif;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Poppins", sans-serif;
     font-weight: 600;
   }
 }
@@ -107,7 +121,9 @@
 @layer components {
   .glass-panel {
     @apply bg-card/60 backdrop-blur-xl border border-border/30 rounded-2xl;
-    box-shadow: 0 8px 32px hsl(263 100% 67% / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.05);
+    box-shadow:
+      0 8px 32px hsl(263 100% 67% / 0.1),
+      inset 0 1px 0 hsl(0 0% 100% / 0.05);
   }
 
   .neon-glow {
@@ -121,11 +137,15 @@
   }
 
   .gradient-border::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: -2px;
     border-radius: calc(var(--radius) + 2px);
-    background: linear-gradient(135deg, hsl(var(--neon-violet)), hsl(var(--teal-glow)));
+    background: linear-gradient(
+      135deg,
+      hsl(var(--neon-violet)),
+      hsl(var(--teal-glow))
+    );
     z-index: -1;
     opacity: 0.8;
     transition: opacity 0.3s ease;
@@ -136,7 +156,11 @@
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, hsl(var(--neon-violet)), hsl(var(--teal-glow)));
+    background: linear-gradient(
+      135deg,
+      hsl(var(--neon-violet)),
+      hsl(var(--teal-glow))
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -153,21 +177,22 @@
 
 @layer utilities {
   .font-heading {
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
   }
 
   .font-body {
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
   }
 
   .font-ui {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: "Space Grotesk", sans-serif;
   }
 }
 
 /* Animations */
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -176,16 +201,22 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 40px hsl(263 100% 67% / 0.3), 0 0 80px hsl(174 70% 52% / 0.2);
+  0%,
+  100% {
+    box-shadow:
+      0 0 40px hsl(263 100% 67% / 0.3),
+      0 0 80px hsl(174 70% 52% / 0.2);
   }
   50% {
-    box-shadow: 0 0 60px hsl(263 100% 67% / 0.5), 0 0 120px hsl(174 70% 52% / 0.3);
+    box-shadow:
+      0 0 60px hsl(263 100% 67% / 0.5),
+      0 0 120px hsl(174 70% 52% / 0.3);
   }
 }
 
 @keyframes ring-pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.6;
   }
@@ -196,7 +227,8 @@
 }
 
 @keyframes particle-float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0) translateX(0);
     opacity: 0.3;
   }
@@ -215,7 +247,8 @@
 }
 
 @keyframes waveform {
-  0%, 100% {
+  0%,
+  100% {
     transform: scaleY(0.5);
   }
   50% {
@@ -269,8 +302,18 @@
   animation: fade-up 0.8s ease-out forwards;
 }
 
-.animation-delay-100 { animation-delay: 0.1s; }
-.animation-delay-200 { animation-delay: 0.2s; }
-.animation-delay-300 { animation-delay: 0.3s; }
-.animation-delay-400 { animation-delay: 0.4s; }
-.animation-delay-500 { animation-delay: 0.5s; }
+.animation-delay-100 {
+  animation-delay: 0.1s;
+}
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+.animation-delay-300 {
+  animation-delay: 0.3s;
+}
+.animation-delay-400 {
+  animation-delay: 0.4s;
+}
+.animation-delay-500 {
+  animation-delay: 0.5s;
+}

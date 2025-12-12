@@ -7,10 +7,30 @@ import { Smile, Moon, Zap, Heart, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const moods = [
-  { id: "happy", mood: "Happy", icon: Smile, gradient: "bg-gradient-to-br from-yellow-500/30 to-orange-500/30" },
-  { id: "chill", mood: "Chill", icon: Moon, gradient: "bg-gradient-to-br from-blue-500/30 to-cyan-500/30" },
-  { id: "energetic", mood: "Energetic", icon: Zap, gradient: "bg-gradient-to-br from-neon-violet/30 to-pink-500/30" },
-  { id: "romantic", mood: "Romantic", icon: Heart, gradient: "bg-gradient-to-br from-rose-500/30 to-neon-teal/30" },
+  {
+    id: "happy",
+    mood: "Happy",
+    icon: Smile,
+    gradient: "bg-gradient-to-br from-yellow-500/30 to-orange-500/30",
+  },
+  {
+    id: "chill",
+    mood: "Chill",
+    icon: Moon,
+    gradient: "bg-gradient-to-br from-blue-500/30 to-cyan-500/30",
+  },
+  {
+    id: "energetic",
+    mood: "Energetic",
+    icon: Zap,
+    gradient: "bg-gradient-to-br from-neon-violet/30 to-pink-500/30",
+  },
+  {
+    id: "romantic",
+    mood: "Romantic",
+    icon: Heart,
+    gradient: "bg-gradient-to-br from-rose-500/30 to-neon-teal/30",
+  },
 ];
 
 const Discover = () => {
@@ -23,7 +43,7 @@ const Discover = () => {
       <div className="fixed inset-0 opacity-20">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-neon-violet/10 rounded-full blur-[150px]" />
       </div>
-      
+
       <Particles count={20} />
       <Navigation />
 
@@ -35,15 +55,16 @@ const Discover = () => {
               Choose Your <span className="text-gradient">Mood</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-lg mx-auto">
-              Select how you're feeling and we'll match you with the perfect anonymous track
+              Select how you're feeling and we'll match you with the perfect
+              anonymous track
             </p>
           </div>
 
           {/* Mood Grid */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12">
             {moods.map((mood, index) => (
-              <div 
-                key={mood.id} 
+              <div
+                key={mood.id}
                 className="opacity-0 animate-fade-in"
                 style={{ animationDelay: `${(index + 1) * 100}ms` }}
               >
@@ -61,8 +82,8 @@ const Discover = () => {
           {/* Continue Button */}
           <div className="flex justify-center opacity-0 animate-fade-in animation-delay-500">
             <Link to={selectedMood ? "/listen" : "#"}>
-              <Button 
-                variant="hero" 
+              <Button
+                variant="hero"
                 size="xl"
                 disabled={!selectedMood}
                 className="disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"

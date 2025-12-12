@@ -1,6 +1,5 @@
-
-import React from 'react';
-import AnalyticsCharts from './AnalyticsCharts';
+import React from "react";
+import AnalyticsCharts from "./AnalyticsCharts";
 
 const Analytics = () => {
   return (

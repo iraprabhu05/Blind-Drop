@@ -5,7 +5,14 @@ import { Particles } from "@/components/Particles";
 import { Upload as UploadIcon, Music, ChevronDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const moods = ["Happy", "Chill", "Energetic", "Romantic", "Melancholic", "Uplifting"];
+const moods = [
+  "Happy",
+  "Chill",
+  "Energetic",
+  "Romantic",
+  "Melancholic",
+  "Uplifting",
+];
 
 const Upload = () => {
   const [dragOver, setDragOver] = useState(false);
@@ -27,7 +34,7 @@ const Upload = () => {
       <div className="fixed inset-0 opacity-20">
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-neon-teal/10 rounded-full blur-[150px]" />
       </div>
-      
+
       <Particles count={15} />
       <Navigation />
 
@@ -47,33 +54,48 @@ const Upload = () => {
           <div className="glass-panel p-8 rounded-3xl opacity-0 animate-fade-in animation-delay-200">
             {/* Drop zone */}
             <div
-              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setDragOver(true);
+              }}
               onDragLeave={() => setDragOver(false)}
               onDrop={handleDrop}
               className={cn(
                 "relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 cursor-pointer mb-6",
-                dragOver 
-                  ? "border-primary bg-primary/5 shadow-neon" 
-                  : "border-border/50 hover:border-primary/50 hover:bg-muted/20"
+                dragOver
+                  ? "border-primary bg-primary/5 shadow-neon"
+                  : "border-border/50 hover:border-primary/50 hover:bg-muted/20",
               )}
             >
               {/* Corner glows */}
-              <div className={cn(
-                "absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 rounded-tl-lg transition-colors duration-300",
-                dragOver ? "border-primary shadow-neon" : "border-primary/50"
-              )} />
-              <div className={cn(
-                "absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 rounded-tr-lg transition-colors duration-300",
-                dragOver ? "border-primary shadow-neon" : "border-primary/50"
-              )} />
-              <div className={cn(
-                "absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 rounded-bl-lg transition-colors duration-300",
-                dragOver ? "border-secondary shadow-neon-teal" : "border-secondary/50"
-              )} />
-              <div className={cn(
-                "absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 rounded-br-lg transition-colors duration-300",
-                dragOver ? "border-secondary shadow-neon-teal" : "border-secondary/50"
-              )} />
+              <div
+                className={cn(
+                  "absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 rounded-tl-lg transition-colors duration-300",
+                  dragOver ? "border-primary shadow-neon" : "border-primary/50",
+                )}
+              />
+              <div
+                className={cn(
+                  "absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 rounded-tr-lg transition-colors duration-300",
+                  dragOver ? "border-primary shadow-neon" : "border-primary/50",
+                )}
+              />
+              <div
+                className={cn(
+                  "absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 rounded-bl-lg transition-colors duration-300",
+                  dragOver
+                    ? "border-secondary shadow-neon-teal"
+                    : "border-secondary/50",
+                )}
+              />
+              <div
+                className={cn(
+                  "absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 rounded-br-lg transition-colors duration-300",
+                  dragOver
+                    ? "border-secondary shadow-neon-teal"
+                    : "border-secondary/50",
+                )}
+              />
 
               <input
                 type="file"
@@ -86,10 +108,14 @@ const Upload = () => {
               />
 
               <div className="flex flex-col items-center gap-4">
-                <div className={cn(
-                  "w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300",
-                  fileName ? "bg-mint/20" : "bg-gradient-to-br from-neon-violet/20 to-neon-teal/20"
-                )}>
+                <div
+                  className={cn(
+                    "w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300",
+                    fileName
+                      ? "bg-mint/20"
+                      : "bg-gradient-to-br from-neon-violet/20 to-neon-teal/20",
+                  )}
+                >
                   {fileName ? (
                     <Music className="w-8 h-8 text-mint" />
                   ) : (
@@ -128,16 +154,22 @@ const Upload = () => {
                 onClick={() => setShowMoods(!showMoods)}
                 className={cn(
                   "w-full px-4 py-3 rounded-xl bg-muted/50 border border-border/30 text-left flex items-center justify-between transition-all duration-300",
-                  showMoods && "border-primary/50 shadow-neon"
+                  showMoods && "border-primary/50 shadow-neon",
                 )}
               >
-                <span className={selectedMood ? "text-foreground" : "text-muted-foreground"}>
+                <span
+                  className={
+                    selectedMood ? "text-foreground" : "text-muted-foreground"
+                  }
+                >
                   {selectedMood || "Select a mood..."}
                 </span>
-                <ChevronDown className={cn(
-                  "w-5 h-5 text-muted-foreground transition-transform duration-300",
-                  showMoods && "rotate-180"
-                )} />
+                <ChevronDown
+                  className={cn(
+                    "w-5 h-5 text-muted-foreground transition-transform duration-300",
+                    showMoods && "rotate-180",
+                  )}
+                />
               </button>
 
               {showMoods && (
@@ -145,10 +177,13 @@ const Upload = () => {
                   {moods.map((mood) => (
                     <button
                       key={mood}
-                      onClick={() => { setSelectedMood(mood); setShowMoods(false); }}
+                      onClick={() => {
+                        setSelectedMood(mood);
+                        setShowMoods(false);
+                      }}
                       className={cn(
                         "w-full px-4 py-3 text-left hover:bg-muted/50 transition-colors duration-200 flex items-center justify-between",
-                        selectedMood === mood && "bg-primary/10 text-primary"
+                        selectedMood === mood && "bg-primary/10 text-primary",
                       )}
                     >
                       {mood}
@@ -160,9 +195,9 @@ const Upload = () => {
             </div>
 
             {/* Submit button */}
-            <Button 
-              variant="hero" 
-              size="xl" 
+            <Button
+              variant="hero"
+              size="xl"
               className="w-full"
               disabled={!fileName || !selectedMood}
             >

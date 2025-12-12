@@ -84,10 +84,10 @@ const Listen = () => {
 
     // Re-attach critical listeners for new audio object
     audioRef.current.addEventListener("timeupdate", () =>
-      setCurrentTime(audioRef.current.currentTime)
+      setCurrentTime(audioRef.current.currentTime),
     );
     audioRef.current.addEventListener("loadedmetadata", () =>
-      setDuration(audioRef.current.duration)
+      setDuration(audioRef.current.duration),
     );
     audioRef.current.addEventListener("error", () => setAudioError(true));
 
@@ -189,13 +189,13 @@ const Listen = () => {
           <div
             className={cn(
               "absolute inset-0 rounded-full border-2 border-neon-violet/20 transition-all duration-500",
-              isPlaying && "animate-ring-pulse"
+              isPlaying && "animate-ring-pulse",
             )}
           />
           <div
             className={cn(
               "absolute inset-3 rounded-full border border-neon-teal/15 transition-all duration-500",
-              isPlaying && "animate-ring-pulse animation-delay-200"
+              isPlaying && "animate-ring-pulse animation-delay-200",
             )}
           />
 
@@ -205,7 +205,7 @@ const Listen = () => {
             className={cn(
               "absolute inset-[20%] rounded-full glass-panel flex items-center justify-center transition-all duration-300 z-20 group",
               "hover:scale-105 hover:shadow-neon-combined active:scale-95",
-              isPlaying && "shadow-neon-combined border-neon-violet/50"
+              isPlaying && "shadow-neon-combined border-neon-violet/50",
             )}
           >
             {isPlaying ? (
@@ -247,7 +247,7 @@ const Listen = () => {
                   "w-8 h-8 transition-all duration-200",
                   (hoveredRating || rating) >= star
                     ? "fill-neon-violet text-neon-violet drop-shadow-lg"
-                    : "text-muted-foreground/20"
+                    : "text-muted-foreground/20",
                 )}
               />
             </button>

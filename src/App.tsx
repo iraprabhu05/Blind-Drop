@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -21,39 +20,44 @@ import RealityWrapped from "./pages/RealityWrapped";
 const queryClient = new QueryClient();
 
 const AppRoutes = () => {
-    const { isLoggedIn, userType } = useAuth();
+  const { isLoggedIn, userType } = useAuth();
 
-    return (
-        <Routes>
-            <Route path="/" element={isLoggedIn ? <Navigate to={`/dashboard/${userType}`} /> : <Index />} />
-            <Route path="/discover" element={<Discover />} />
-            <Route path="/listen" element={<Listen />} />
-            <Route path="/reveal" element={<Reveal />} />
-            <Route path="/upload" element={<Upload />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/reality-wrapped" element={<RealityWrapped />} />
-            <Route element={<ProtectedRoute allowedUserType='user' />}>
-                <Route path="/dashboard/user" element={<UserDashboard />} />
-            </Route>
-            <Route element={<ProtectedRoute allowedUserType='artist' />}>
-                <Route path="/dashboard/artist/*" element={<ArtistDashboard />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-        </Routes>
-    )
-}
+  return (
+    <Routes>
+      <Route
+        path="/"
+        element={
+          isLoggedIn ? <Navigate to={`/dashboard/${userType}`} /> : <Index />
+        }
+      />
+      <Route path="/discover" element={<Discover />} />
+      <Route path="/listen" element={<Listen />} />
+      <Route path="/reveal" element={<Reveal />} />
+      <Route path="/upload" element={<Upload />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/auth" element={<Auth />} />
+      <Route path="/reality-wrapped" element={<RealityWrapped />} />
+      <Route element={<ProtectedRoute allowedUserType="user" />}>
+        <Route path="/dashboard/user" element={<UserDashboard />} />
+      </Route>
+      <Route element={<ProtectedRoute allowedUserType="artist" />}>
+        <Route path="/dashboard/artist/*" element={<ArtistDashboard />} />
+      </Route>
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-        <AuthProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <AppRoutes />
-              </BrowserRouter>
-        </AuthProvider>
+      <AuthProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

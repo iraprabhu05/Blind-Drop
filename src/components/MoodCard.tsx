@@ -9,7 +9,13 @@ interface MoodCardProps {
   onClick?: () => void;
 }
 
-export const MoodCard = ({ mood, icon: Icon, gradient, selected, onClick }: MoodCardProps) => {
+export const MoodCard = ({
+  mood,
+  icon: Icon,
+  gradient,
+  selected,
+  onClick,
+}: MoodCardProps) => {
   return (
     <button
       onClick={onClick}
@@ -18,37 +24,39 @@ export const MoodCard = ({ mood, icon: Icon, gradient, selected, onClick }: Mood
         "bg-card/40 backdrop-blur-xl border border-border/30",
         "hover:scale-105 hover:shadow-float cursor-pointer",
         "min-h-[180px] w-full",
-        selected && "border-primary/60 shadow-neon scale-105"
+        selected && "border-primary/60 shadow-neon scale-105",
       )}
     >
       {/* Gradient background on hover/select */}
-      <div 
+      <div
         className={cn(
           "absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-500",
           "group-hover:opacity-20",
           selected && "opacity-30",
-          gradient
+          gradient,
         )}
       />
-      
+
       {/* Icon container */}
-      <div 
+      <div
         className={cn(
           "relative flex items-center justify-center w-16 h-16 rounded-2xl transition-all duration-500",
           "bg-gradient-to-br from-muted/50 to-muted/30",
           "group-hover:shadow-neon",
           selected && "shadow-neon",
-          gradient
+          gradient,
         )}
       >
         <Icon className="w-8 h-8 text-foreground transition-transform duration-500 group-hover:scale-110" />
       </div>
 
       {/* Label */}
-      <span className={cn(
-        "font-heading font-medium text-lg transition-all duration-300",
-        selected ? "text-gradient" : "text-foreground"
-      )}>
+      <span
+        className={cn(
+          "font-heading font-medium text-lg transition-all duration-300",
+          selected ? "text-gradient" : "text-foreground",
+        )}
+      >
         {mood}
       </span>
 

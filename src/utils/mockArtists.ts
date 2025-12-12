@@ -1,4 +1,3 @@
-
 export interface Artist {
   id: number;
   name: string;
@@ -18,7 +17,8 @@ export const mockArtists: Artist[] = [
     avatarUrl: "/placeholder.svg",
     lat: 34.0522,
     lon: -118.2437,
-    topSongUrl: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
+    topSongUrl:
+      "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 2,
@@ -27,7 +27,8 @@ export const mockArtists: Artist[] = [
     avatarUrl: "/placeholder.svg",
     lat: 34.055,
     lon: -118.25,
-    topSongUrl: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
+    topSongUrl:
+      "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 3,
@@ -36,7 +37,8 @@ export const mockArtists: Artist[] = [
     avatarUrl: "/placeholder.svg",
     lat: 34.06,
     lon: -118.24,
-    topSongUrl: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
+    topSongUrl:
+      "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 4,
@@ -45,7 +47,8 @@ export const mockArtists: Artist[] = [
     avatarUrl: "/placeholder.svg",
     lat: 34.1,
     lon: -118.3,
-    topSongUrl: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
+    topSongUrl:
+      "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 5,
@@ -54,7 +57,8 @@ export const mockArtists: Artist[] = [
     avatarUrl: "/placeholder.svg",
     lat: 34.04,
     lon: -118.2,
-    topSongUrl: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
+    topSongUrl:
+      "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 6,
@@ -63,16 +67,18 @@ export const mockArtists: Artist[] = [
     avatarUrl: "/placeholder.svg",
     lat: 34.05,
     lon: -118.26,
-    topSongUrl: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
+    topSongUrl:
+      "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
-    {
+  {
     id: 7,
     name: "Echoes of Ether",
     genre: "Psychedelic Trance",
     avatarUrl: "/placeholder.svg",
     lat: 34.15,
     lon: -118.35,
-    topSongUrl: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
+    topSongUrl:
+      "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 8,
@@ -81,6 +87,7 @@ export const mockArtists: Artist[] = [
     avatarUrl: "/placeholder.svg",
     lat: 34.2,
     lon: -118.4,
-    topSongUrl: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
+    topSongUrl:
+      "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
 ];

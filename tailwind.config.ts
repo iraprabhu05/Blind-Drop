@@ -2,7 +2,12 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -14,9 +19,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        heading: ['Poppins', 'sans-serif'],
-        ui: ['Space Grotesk', 'sans-serif'],
+        sans: ["Inter", "sans-serif"],
+        heading: ["Poppins", "sans-serif"],
+        ui: ["Space Grotesk", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -78,11 +83,13 @@ export default {
         "3xl": "2rem",
       },
       boxShadow: {
-        'neon': '0 0 40px hsl(var(--neon-violet) / 0.4)',
-        'neon-teal': '0 0 40px hsl(var(--teal-glow) / 0.4)',
-        'neon-combined': '0 0 60px hsl(var(--neon-violet) / 0.3), 0 0 100px hsl(var(--teal-glow) / 0.2)',
-        'glass': '0 8px 32px hsl(var(--neon-violet) / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.05)',
-        'float': '0 20px 60px hsl(0 0% 0% / 0.3)',
+        neon: "0 0 40px hsl(var(--neon-violet) / 0.4)",
+        "neon-teal": "0 0 40px hsl(var(--teal-glow) / 0.4)",
+        "neon-combined":
+          "0 0 60px hsl(var(--neon-violet) / 0.3), 0 0 100px hsl(var(--teal-glow) / 0.2)",
+        glass:
+          "0 8px 32px hsl(var(--neon-violet) / 0.1), inset 0 1px 0 hsl(0 0% 100% / 0.05)",
+        float: "0 20px 60px hsl(0 0% 0% / 0.3)",
       },
       keyframes: {
         "accordion-down": {
@@ -102,11 +109,13 @@ export default {
           "100%": { transform: "scale(1)", opacity: "1" },
         },
         "glow-pulse": {
-          "0%, 100%": { 
-            boxShadow: "0 0 40px hsl(var(--neon-violet) / 0.3), 0 0 80px hsl(var(--teal-glow) / 0.2)" 
+          "0%, 100%": {
+            boxShadow:
+              "0 0 40px hsl(var(--neon-violet) / 0.3), 0 0 80px hsl(var(--teal-glow) / 0.2)",
           },
-          "50%": { 
-            boxShadow: "0 0 60px hsl(var(--neon-violet) / 0.5), 0 0 120px hsl(var(--teal-glow) / 0.3)" 
+          "50%": {
+            boxShadow:
+              "0 0 60px hsl(var(--neon-violet) / 0.5), 0 0 120px hsl(var(--teal-glow) / 0.3)",
           },
         },
       },
@@ -118,8 +127,9 @@ export default {
         "glow-pulse": "glow-pulse 3s ease-in-out infinite",
       },
       backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-neon': 'linear-gradient(135deg, hsl(var(--neon-violet)), hsl(var(--teal-glow)))',
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-neon":
+          "linear-gradient(135deg, hsl(var(--neon-violet)), hsl(var(--teal-glow)))",
       },
     },
   },

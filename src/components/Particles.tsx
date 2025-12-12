@@ -17,7 +17,12 @@ export const Particles = ({ count = 20, className }: ParticlesProps) => {
   }));
 
   return (
-    <div className={cn("absolute inset-0 overflow-hidden pointer-events-none", className)}>
+    <div
+      className={cn(
+        "absolute inset-0 overflow-hidden pointer-events-none",
+        className,
+      )}
+    >
       {particles.map((particle) => (
         <div
           key={particle.id}

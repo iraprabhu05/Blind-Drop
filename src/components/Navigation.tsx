@@ -1,5 +1,12 @@
 import { cn } from "@/lib/utils";
-import { Headphones, User, Upload, Disc3, LogOut, LayoutDashboard } from "lucide-react";
+import {
+  Headphones,
+  User,
+  Upload,
+  Disc3,
+  LogOut,
+  LayoutDashboard,
+} from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { Button } from "./ui/button";
@@ -11,8 +18,8 @@ export const Navigation = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
-  }
+    navigate("/");
+  };
 
   const links = [
     { href: "/discover", icon: Disc3, label: "Discover" },
@@ -38,24 +45,24 @@ export const Navigation = () => {
           {/* Nav Links & Auth */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-                {links.map((link) => {
-                  const isActive = location.pathname === link.href;
-                  return (
-                    <Link
-                      key={link.href}
-                      to={link.href}
-                      className={cn(
-                        "flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 font-ui text-sm",
-                        isActive
-                          ? "bg-primary/20 text-primary shadow-neon border border-primary/30"
-                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                      )}
-                    >
-                      <link.icon className="w-4 h-4" />
-                      <span className="hidden sm:inline">{link.label}</span>
-                    </Link>
-                  );
-                })}
+              {links.map((link) => {
+                const isActive = location.pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    className={cn(
+                      "flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 font-ui text-sm",
+                      isActive
+                        ? "bg-primary/20 text-primary shadow-neon border border-primary/30"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
+                    )}
+                  >
+                    <link.icon className="w-4 h-4" />
+                    <span className="hidden sm:inline">{link.label}</span>
+                  </Link>
+                );
+              })}
             </div>
 
             <div className="h-6 w-px bg-border/40"></div>
@@ -69,14 +76,16 @@ export const Navigation = () => {
                   </Button>
                 </Link>
                 <Button onClick={handleLogout} variant="primary" size="sm">
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Logout
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
                 </Button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
                 <Link to="/auth">
-                  <Button variant="primary" size="sm">Get Started</Button>
+                  <Button variant="primary" size="sm">
+                    Get Started
+                  </Button>
                 </Link>
               </div>
             )}
