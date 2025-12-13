@@ -92,7 +92,7 @@ export const ArtistsNearYouPreview = ({
             <div key={artist.id} className="flex-shrink-0">
               <ArtistCard
                 artist={artist}
-                playSong={(songUrl) => playSong(songUrl, artist)}
+                playSong={() => playSong(artist.topSongUrl, artist)}
               />
             </div>
           ))}

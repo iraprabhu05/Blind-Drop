@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Discover from "./pages/Discover";
+import Artists from "./pages/Artists";
 import Listen from "./pages/Listen";
 import Reveal from "./pages/Reveal";
 import Upload from "./pages/Upload";
@@ -33,6 +34,7 @@ const AppRoutes = () => {
         }
       />
       <Route path="/discover" element={<Discover />} />
+      <Route path="/artists" element={<Artists />} />
       <Route path="/listen" element={<Listen />} />
       <Route path="/reveal" element={<Reveal />} />
       <Route path="/upload" element={<Upload />} />

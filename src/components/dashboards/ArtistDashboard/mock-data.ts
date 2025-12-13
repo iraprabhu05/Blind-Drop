@@ -1,15 +1,17 @@
 export const artistProfile = {
-  name: "SPECTRA",
-  avatar: "https://placehold.co/100x100/1a1a1a/ffffff?text=S",
-  banner: "https://placehold.co/1200x400/1a1a1a/ffffff?text=Banner",
-  bio: "Synthesizing the future of electronic music. Based in Neo-Kyoto.",
-  genre: "Cyber-Funk",
-  socials: {
-    twitter: "https://twitter.com/spectra",
-    instagram: "https://instagram.com/spectra",
-    spotify: "https://spotify.com/artist/spectra",
-  },
-};
+  
+    name: "Claire",
+    avatar: "https://placehold.co/100x100/1a1a1a/ffffff?text=C",
+    banner: "https://placehold.co/1200x400/1a1a1a/ffffff?text=Banner",
+    bio: "Pop melodies with a digital edge. Soft vocals, late-night energy.",
+    genre: "Pop",
+    socials: {
+      twitter: "https://twitter.com/claire",
+      instagram: "https://instagram.com/claire",
+      spotify: "https://spotify.com/artist/claire",
+    },
+  };
+  
 
 export const overviewStats = {
   totalPlays: "2.8M",

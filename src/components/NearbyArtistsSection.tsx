@@ -8,7 +8,7 @@ import { RadiusFilter } from "./RadiusFilter";
 import { Skeleton } from "./ui/skeleton";
 
 interface NearbyArtistsSectionProps {
-  playSong: (songUrl: string) => void;
+  playSong: (songUrl: string, artist: Artist) => void;
 }
 
 export const NearbyArtistsSection = ({
@@ -25,7 +25,7 @@ export const NearbyArtistsSection = ({
         location.latitude,
         location.longitude,
         artist.lat,
-        artist.lon,
+        artist.lon
       ),
     }));
   }, [location]);
@@ -33,24 +33,31 @@ export const NearbyArtistsSection = ({
   const filteredArtists = useMemo(() => {
     return artistsWithDistance
       .filter(
-        (artist) => artist.distance !== undefined && artist.distance <= radius,
+        (artist) => artist.distance !== undefined && artist.distance <= radius
       )
       .sort((a, b) => a.distance! - b.distance!);
   }, [artistsWithDistance, radius]);
 
+  const handlePlaySong = (artist: Artist) => {
+    playSong(artist.topSongUrl, artist);
+  };
+
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={i}
-            className="w-[250px] bg-card/60 backdrop-blur-sm border-border/20 shadow-lg rounded-xl p-4"
-          >
-            <Skeleton className="w-full h-40 rounded-lg mb-4" />
-            <Skeleton className="w-3/4 h-6 mb-2" />
-            <Skeleton className="w-1/2 h-4" />
-          </div>
-        ))}
+      <div>
+        <div className="flex justify-between items-center mb-6">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-10 w-32" />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="w-full">
+              <Skeleton className="w-full h-40 rounded-lg mb-3" />
+              <Skeleton className="w-3/4 h-5 mb-2" />
+              <Skeleton className="w-1/2 h-4" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -62,22 +69,27 @@ export const NearbyArtistsSection = ({
   }
 
   return (
-    <div>
+    <div className="animate-fade-in">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Nearby Artists</h2>
+        <h2 className="text-3xl font-bold text-white">Artists Near You</h2>
         <RadiusFilter selectedRadius={radius} onRadiusChange={setRadius} />
       </div>
       {filteredArtists.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {filteredArtists.map((artist) => (
-            <ArtistCard key={artist.id} artist={artist} playSong={playSong} />
+            <ArtistCard
+              key={artist.id}
+              artist={artist}
+              playSong={() => handlePlaySong(artist)}
+            />
           ))}
         </div>
       ) : (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">
-            No artists found within {radius}km. Try expanding your radius.
+        <div className="text-center py-16 bg-gray-900/50 rounded-lg">
+          <p className="text-lg text-gray-400">
+            No artists found within {radius}km.
           </p>
+          <p className="text-gray-500 mt-2">Try expanding your search radius.</p>
         </div>
       )}
     </div>

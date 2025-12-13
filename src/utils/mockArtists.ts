@@ -9,84 +9,88 @@ export interface Artist {
   distance?: number;
 }
 
+// Centered around Berlin, Germany for more realistic "nearby" distances for a wider audience.
+const centerLat = 52.52;
+const centerLon = 13.405;
+
 export const mockArtists: Artist[] = [
   {
     id: 1,
-    name: "Celestial Echoes",
-    genre: "Ambient Lo-fi",
-    avatarUrl: "/placeholder.svg",
-    lat: 34.0522,
-    lon: -118.2437,
+    name: "Aurora Bloom",
+    genre: "Dream Pop",
+    avatarUrl: "https://picsum.photos/seed/41/300/300",
+    lat: centerLat + 0.001,
+    lon: centerLon - 0.002,
     topSongUrl:
       "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 2,
-    name: "Neon Dreams",
-    genre: "Synthwave",
-    avatarUrl: "/placeholder.svg",
-    lat: 34.055,
-    lon: -118.25,
+    name: "Vector Trace",
+    genre: "Cyber-Funk",
+    avatarUrl: "https://picsum.photos/seed/42/300/300",
+    lat: centerLat - 0.002,
+    lon: centerLon + 0.003,
     topSongUrl:
       "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 3,
-    name: "Rhythmic Silence",
-    genre: "Minimal Techno",
-    avatarUrl: "/placeholder.svg",
-    lat: 34.06,
-    lon: -118.24,
+    name: "Silent Planet",
+    genre: "Cosmic Jazz",
+    avatarUrl: "https://picsum.photos/seed/43/300/300",
+    lat: centerLat + 0.003,
+    lon: centerLon + 0.001,
     topSongUrl:
       "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 4,
-    name: "Velvet Groove",
-    genre: "Soulful R&B",
-    avatarUrl: "/placeholder.svg",
-    lat: 34.1,
-    lon: -118.3,
+    name: "Midnight Canvas",
+    genre: "Nocturnal Bass",
+    avatarUrl: "https://picsum.photos/seed/44/300/300",
+    lat: centerLat - 0.004,
+    lon: centerLon - 0.004,
     topSongUrl:
       "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 5,
-    name: "Ghostrifter",
-    genre: "Chillhop",
-    avatarUrl: "/placeholder.svg",
-    lat: 34.04,
-    lon: -118.2,
+    name: "Chrono Rider",
+    genre: "Retro Futurist",
+    avatarUrl: "https://picsum.photos/seed/45/300/300",
+    lat: centerLat + 0.005,
+    lon: centerLon,
     topSongUrl:
       "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 6,
-    name: "Lost Frequencies",
-    genre: "Deep House",
-    avatarUrl: "/placeholder.svg",
-    lat: 34.05,
-    lon: -118.26,
+    name: "Tidal Bloom",
+    genre: "Aquatic Beats",
+    avatarUrl: "https://picsum.photos/seed/46/300/300",
+    lat: centerLat,
+    lon: centerLon + 0.005,
     topSongUrl:
       "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 7,
-    name: "Echoes of Ether",
-    genre: "Psychedelic Trance",
-    avatarUrl: "/placeholder.svg",
-    lat: 34.15,
-    lon: -118.35,
+    name: "Geomancer",
+    genre: "Earthly Techno",
+    avatarUrl: "https://picsum.photos/seed/47/300/300",
+    lat: centerLat - 0.003,
+    lon: -centerLon - 0.001,
     topSongUrl:
       "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 8,
-    name: "Solar Fields",
-    genre: "Ambient",
-    avatarUrl: "/placeholder.svg",
-    lat: 34.2,
-    lon: -118.4,
+    name: "Starlight Drifter",
+    genre: "Astral Hop",
+    avatarUrl: "https://picsum.photos/seed/48/300/300",
+    lat: centerLat + 0.002,
+    lon: -centerLon + 0.004,
     topSongUrl:
       "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },

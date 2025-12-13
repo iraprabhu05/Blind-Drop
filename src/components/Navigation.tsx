@@ -6,6 +6,7 @@ import {
   Disc3,
   LogOut,
   LayoutDashboard,
+  Users,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
@@ -23,6 +24,7 @@ export const Navigation = () => {
 
   const links = [
     { href: "/discover", icon: Disc3, label: "Discover" },
+    { href: "/artists", icon: Users, label: "Artists" },
     { href: "/upload", icon: Upload, label: "Upload" },
     { href: "/profile", icon: User, label: "Profile" },
   ];

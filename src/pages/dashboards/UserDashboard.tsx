@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LogOut } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import RecommendationsCarousel from "../../components/dashboards/UserDashboard/RecommendationsCarousel";
@@ -10,6 +10,7 @@ import MusicPlayerBar from "../../components/dashboards/UserDashboard/MusicPlaye
 import CreatePlaylistDialog from "../../components/dashboards/UserDashboard/CreatePlaylistDialog";
 import { Button } from "../../components/ui/button";
 import { NearbyArtistsSection } from "@/components/NearbyArtistsSection";
+import { Artist } from "@/utils/mockArtists";
 
 // Mock Data
 const recommendedSongs = [
@@ -17,35 +18,35 @@ const recommendedSongs = [
     id: 1,
     title: "Mirage",
     artist: "Stylo",
-    cover: "https://placehold.co/300x300/1a1a1a/ffffff?text=Mirage",
+    cover: "https://picsum.photos/seed/13/300/300",
     url: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 2,
     title: "Odyssey",
     artist: "A.L.I.S.O.N",
-    cover: "https://placehold.co/300x300/1a1a1a/ffffff?text=Odyssey",
+    cover: "https://picsum.photos/seed/14/300/300",
     url: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 3,
     title: "Nightcall",
     artist: "Kavinsky",
-    cover: "https://placehold.co/300x300/1a1a1a/ffffff?text=Nightcall",
+    cover: "https://picsum.photos/seed/15/300/300",
     url: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 4,
     title: "Genesis",
     artist: "Justice",
-    cover: "https://placehold.co/300x300/1a1a1a/ffffff?text=Genesis",
+    cover: "https://picsum.photos/seed/16/300/300",
     url: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 5,
     title: "Hotline",
     artist: "Jasper Byrne",
-    cover: "https://placehold.co/300x300/1a1a1a/ffffff?text=Hotline",
+    cover: "https://picsum.photos/seed/17/300/300",
     url: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
 ];
@@ -55,21 +56,21 @@ const favoriteSongs = [
     id: 6,
     title: "Resonance",
     artist: "Home",
-    cover: "https://placehold.co/100x100/1a1a1a/ffffff?text=Resonance",
+    cover: "https://picsum.photos/seed/18/100/100",
     url: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 7,
     title: "Crystals",
     artist: "M.O.O.N.",
-    cover: "https://placehold.co/100x100/1a1a1a/ffffff?text=Crystals",
+    cover: "https://picsum.photos/seed/19/100/100",
     url: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 8,
     title: "Voyager",
     artist: "Daft Punk",
-    cover: "https://placehold.co/100x100/1a1a1a/ffffff?text=Voyager",
+    cover: "https://picsum.photos/seed/20/100/100",
     url: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
 ];
@@ -79,28 +80,28 @@ const recentlyPlayedSongs = [
     id: 9,
     title: "Turbo Killer",
     artist: "Carpenter Brut",
-    cover: "https://placehold.co/200x200/1a1a1a/ffffff?text=Turbo+Killer",
+    cover: "https://picsum.photos/seed/21/200/200",
     url: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 10,
     title: "Technoir",
     artist: "Perturbator",
-    cover: "https://placehold.co/200x200/1a1a1a/ffffff?text=Technoir",
+    cover: "https://picsum.photos/seed/22/200/200",
     url: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 11,
     title: "Miami Disco",
     artist: "Miami Nights 1984",
-    cover: "https://placehold.co/200x200/1a1a1a/ffffff?text=Miami+Disco",
+    cover: "https://picsum.photos/seed/23/200/200",
     url: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
   {
     id: 12,
     title: "Sunset",
     artist: "The Midnight",
-    cover: "https://placehold.co/200x200/1a1a1a/ffffff?text=Sunset",
+    cover: "https://picsum.photos/seed/24/200/200",
     url: "https://storage.googleapis.com/uci-chat-models-not-for-production.appspot.com/Odesza-A-Moment-Apart.mp3",
   },
 ];
@@ -135,19 +136,42 @@ const initialPlaylists = [
   },
 ];
 
+// List of creative usernames
+const creativeUsernames = [
+  "SynthwaveSurfer",
+  "RetrogradeRider",
+  "FutureFunkFanatic",
+  "ChillwaveChampion",
+  "VaporwaveVoyager",
+  "CyberpunkConnoisseur",
+  "DreamyListener",
+  "BeatSeeker",
+  "GrooveMaster",
+  "AudioArchitect",
+];
+
+// Function to get a random item from an array
+const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
 const UserDashboard = () => {
   const { logout } = useAuth();
   const [currentSong, setCurrentSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playlists, setPlaylists] = useState(initialPlaylists);
   const [isCreatePlaylistOpen, setCreatePlaylistOpen] = useState(false);
+  const [username, setUsername] = useState("");
+
+  // Set a random username on component mount
+  useEffect(() => {
+    setUsername(getRandomItem(creativeUsernames));
+  }, []);
 
   const handlePlay = (song) => {
     setCurrentSong(song);
     setIsPlaying(true);
   };
 
-  const handlePlayUrl = (songUrl, artist) => {
+  const handlePlayUrl = (songUrl: string, artist: Artist) => {
     const song = {
       url: songUrl,
       title: artist.name,
@@ -205,7 +229,7 @@ const UserDashboard = () => {
         <header className="flex justify-between items-center mb-10">
           <div>
             <h1 className="text-4xl font-heading font-bold">
-              Welcome back, User
+              Welcome back, {username}
             </h1>
             <p className="text-muted-foreground text-lg">
               Your personalized music dashboard
@@ -233,9 +257,7 @@ const UserDashboard = () => {
               <FavoritesPanel songs={favoriteSongs} onPlay={handlePlay} />
             </div>
           </div>
-          <NearbyArtistsSection
-            playSong={(songUrl, artist) => handlePlayUrl(songUrl, artist)}
-          />
+          <NearbyArtistsSection playSong={handlePlayUrl} />
           <GenreTags genres={genres} />
           <PlaylistQuickAccess
             playlists={playlists}
