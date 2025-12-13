@@ -1,42 +1,57 @@
 # Blind Drop
 
-Blind Drop is a platform where artists upload music anonymously and listeners discover songs based only on sound. The goal is simple
-remove bias and let the music speak.
+Blind Drop is a music discovery platform where artists upload songs anonymously and listeners discover music based only on sound.  
+By removing artist identity, the platform eliminates bias and lets the music speak for itself.
 
-<img width="1879" height="846" alt="image" src="https://github.com/user-attachments/assets/e5bd82a0-936e-4565-b39c-2c6af734e415" />
+![Blind Drop Landing](https://github.com/user-attachments/assets/e5bd82a0-936e-4565-b39c-2c6af734e415)
 
-# Features
+---
 
-## Artist Features
+## Features
 
-2.Anonymous song uploads
+![CI Status](https://github.com/user-attachments/assets/bc961397-898a-4c6e-b0f4-f9c4aa2e7876)
 
-3.Artist dashboard with stats and performance
+### Artist Features
+- Anonymous song uploads  
+- Dashboard with track performance and stats  
+- Honest and unbiased listener feedback  
+- Easy track management and uploads  
 
-4.Unbiased feedback from listeners
+### Listener Features
+- Discover music without artist identity  
+- Vote and react to tracks  
+- Create playlists from favorite drops  
+- Pure discovery experience  
 
-5.Track management and easy upload flow
+### Platform Features
+- Fast and clean user interface  
+- Secure authentication  
+- Real time updates  
+- Scalable component based architecture  
 
-## Listener Features
+---
 
-1.Discover anonymous music
+## Tech Stack
 
-2.Vote and react to tracks
+- **Frontend**: React, TypeScript, Vite, Tailwind CSS, shadcn/ui  
+- **Backend**: Node.js, Express.js, REST APIs  
+- **Database**: MongoDB, Mongoose  
+- **Authentication**: Firebase Authentication  
+- **Storage**: Cloud storage for audio files  
+- **Dev Tools**: GitHub Actions, ESLint, Prettier  
 
-3.Create playlists from favorite drops
+---
 
-4.Pure discovery without knowing who the artist is
+## Setup Instructions
 
-## Platform Features
+### Prerequisites
+- Node.js v18 or higher  
+- npm or yarn  
+- MongoDB local or cloud instance  
 
-1.Fast UI with a clean layout
+### Installation
 
-2.Secure authentication
-
-3.Real time updates
-
-\*\* Scalable component structure
-
-Tech Stack
-
-This project is built with: React, Typescrpt,Vite, Tailwind CSS,shadcn ui
+```bash
+git clone https://github.com/iraprabhu05/Blind-Drop.git
+cd Blind-Drop
+npm install
