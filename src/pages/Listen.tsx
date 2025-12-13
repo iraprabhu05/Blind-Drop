@@ -43,8 +43,8 @@ const Listen = () => {
   // AUTO HIDE AI MESSAGE
   useEffect(() => {
     if (!aiMessage) return;
-    const t = setTimeout(() => setAiMessage(null), 3000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setAiMessage(null), 3000);
+    return () => clearTimeout(timer);
   }, [aiMessage]);
 
   // AUDIO EVENTS
@@ -73,7 +73,7 @@ const Listen = () => {
     };
   }, []);
 
-  // PLAY PAUSE
+  // PLAY / PAUSE
   useEffect(() => {
     if (isPlaying) {
       audioRef.current.play().catch(() => setIsPlaying(false));
@@ -114,11 +114,23 @@ const Listen = () => {
     if (star >= 4) {
       try {
         const nextSong = await getSmartRecommendation(currentSong);
-        setAiMessage(`AI queued "${nextSong.title}" by ${nextSong.artist}`);
+
+        // 👇 BLIND-SAFE AI MESSAGE
+        const messageOptions = [
+          "AI thinks you’ll like this vibe",
+          "Next up: similar energy and genre",
+          "Queued something with a matching feel",
+          "Based on your rating, this should hit",
+        ];
+
+        setAiMessage(
+          messageOptions[Math.floor(Math.random() * messageOptions.length)],
+        );
+
         setCurrentSong(nextSong);
         setIsPlaying(true);
       } catch {
-        setAiMessage("AI failed. Skipping track.");
+        setAiMessage("AI skipped ahead to a similar track");
         handleSkip();
       }
     }
