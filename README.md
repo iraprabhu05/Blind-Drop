@@ -43,6 +43,10 @@ Link: https://blind-drop.vercel.app/
 - **Dev Tools**: GitHub Actions, ESLint, Prettier  
 
 ---
+## Demo
+
+https://github.com/user-attachments/assets/ade8ad8e-acc9-462d-b846-bc53da5667fd
+
 
 ## Setup Instructions
 
