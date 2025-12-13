@@ -35,7 +35,7 @@ By removing artist identity, the platform eliminates bias and lets the music spe
 
 - **Frontend**: React, TypeScript, Vite, Tailwind CSS, shadcn/ui  
 - **Backend**: Node.js, Express.js, REST APIs  
-- **Database**: MongoDB, Mongoose  
+- **Database**: MongoDB
 - **Authentication**: Firebase Authentication  
 - **Storage**: Cloud storage for audio files  
 - **Dev Tools**: GitHub Actions, ESLint, Prettier  
