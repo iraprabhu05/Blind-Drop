@@ -15,7 +15,7 @@ const LoadingScreen = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setMessageIndex((prevIndex) => (prevIndex + 1) % loadingMessages.length);
-    }, 3000); // Change message every 3 seconds
+    }, 2000); // Change message every 2 seconds
 
     return () => clearInterval(interval);
   }, []);
