@@ -1,42 +1,51 @@
 # Blind Drop
 
-Blind Drop is a platform where artists upload music anonymously and listeners discover songs based only on sound. The goal is simple
-remove bias and let the music speak.
+Blind Drop is a platform where artists upload music anonymously and listeners discover songs based only on sound.  
+The goal is simple: remove bias and let the music speak.
 
-<img width="1879" height="846" alt="image" src="https://github.com/user-attachments/assets/e5bd82a0-936e-4565-b39c-2c6af734e415" />
+![Blind Drop Preview](https://github.com/user-attachments/assets/e5bd82a0-936e-4565-b39c-2c6af734e415)
 
-# Features
+---
+
+## Features
+
+![GitHub Actions](https://github.com/user-attachments/assets/bc961397-898a-4c6e-b0f4-f9c4aa2e7876)
+
+---
 
 ## Artist Features
 
-2.Anonymous song uploads
+- Anonymous song uploads  
+- Artist dashboard with stats and performance insights  
+- Unbiased feedback from listeners  
+- Track management with an easy upload flow  
 
-3.Artist dashboard with stats and performance
-
-4.Unbiased feedback from listeners
-
-5.Track management and easy upload flow
+---
 
 ## Listener Features
 
-1.Discover anonymous music
+- Discover music without artist identity  
+- Vote and react to tracks  
+- Create playlists from favorite drops  
+- Pure music discovery with no bias  
 
-2.Vote and react to tracks
-
-3.Create playlists from favorite drops
-
-4.Pure discovery without knowing who the artist is
+---
 
 ## Platform Features
 
-1.Fast UI with a clean layout
+- Fast and responsive UI with a clean layout  
+- Secure authentication  
+- Real-time updates  
+- Scalable component-based architecture  
 
-2.Secure authentication
+---
 
-3.Real time updates
+## Tech Stack
 
-\*\* Scalable component structure
+- **Frontend**: React, TypeScript, Vite, Tailwind CSS, shadcn/ui  
+- **Backend**: Node.js, Express.js, REST APIs  
+- **Database**: MongoDB  
+- **Authentication**: Firebase Authentication  
+- **Storage**: Cloud storage for audio files  
+- **Dev Tools**: GitHub Actions, ESLint, Prettier
 
-Tech Stack
-
-This project is built with: React, Typescrpt,Vite, Tailwind CSS,shadcn ui
