@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 
 const loadingMessages = [
@@ -43,9 +42,7 @@ const LoadingScreen = () => {
             className="absolute w-48 h-48 bg-charcoal rounded-2xl shadow-glass backdrop-blur-md"
             style={{
               animation: `slide ${5 + i}s linear infinite`,
-              transform: `rotate(${i * 20}deg) translate(${
-                (i - 2.5) * 150
-              }px)`,
+              transform: `rotate(${i * 20}deg) translate(${(i - 2.5) * 150}px)`,
               opacity: 0.3,
             }}
           />
