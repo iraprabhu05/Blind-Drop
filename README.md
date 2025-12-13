@@ -3,6 +3,7 @@
 Blind Drop is a music discovery platform where artists upload songs anonymously and listeners discover music based only on sound.  
 By removing artist identity, the platform eliminates bias and lets the music speak for itself.
 
+Link: https://amazing-banoffee-af1a46.netlify.app/
 ![Blind Drop Landing](https://github.com/user-attachments/assets/e5bd82a0-936e-4565-b39c-2c6af734e415)
 
 ---
