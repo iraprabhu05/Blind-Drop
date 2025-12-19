@@ -17,12 +17,6 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
 import { toast } from "sonner";
 
 const Auth: React.FC = () => {
@@ -31,130 +25,50 @@ const Auth: React.FC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [otp, setOtp] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isVerified, setIsVerified] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSendOtp = async (
-    e: React.FormEvent,
-    formType: "login" | "signup",
-  ) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (!email) {
-      const msg = "Please enter your email address.";
+    if (!email || !password) {
+      const msg = "Please enter your email and password.";
       setError(msg);
       toast.error(msg);
       return;
     }
-
-    if (formType === "signup") {
-      if (!password || !confirmPassword) {
-        const msg = "Please fill in all fields";
-        setError(msg);
-        toast.error(msg);
-        return;
-      }
-      if (password !== confirmPassword) {
-        const msg = "Passwords do not match";
-        setError(msg);
-        toast.error(msg);
-        return;
-      }
-    }
-
-    setIsLoading(true);
-    toast.info("Sending OTP...");
-
-    try {
-      const response = await fetch("http://localhost:3000/api/request-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setOtpSent(true);
-        toast.success(data.message);
-        if (data.otp) {
-          toast.info(`OTP for testing: ${data.otp}`);
-        }
-      } else {
-        setError(data.message || "Failed to send OTP.");
-        toast.error(data.message || "Failed to send OTP.");
-      }
-    } catch (err) {
-      const msg = "An error occurred while sending the OTP.";
-      setError(msg);
-      toast.error(msg);
-    } finally {
-      setIsLoading(false);
-    }
+    login(userType);
+    navigate(`/dashboard/${userType}`);
   };
 
-  const handleResendOtp = (
-    e: React.FormEvent,
-    formType: "login" | "signup",
-  ) => {
-    setOtp("");
-    handleSendOtp(e, formType);
-  };
-
-  const handleVerify = async (e: React.FormEvent, formType: "login" | "signup") => {
+  const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (!otp) {
-      const msg = "Please enter the OTP.";
+    if (!email || !password || !confirmPassword) {
+      const msg = "Please fill in all fields";
       setError(msg);
       toast.error(msg);
       return;
     }
-
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("http://localhost:3000/api/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setIsVerified(true);
-        toast.success("Email verified successfully!");
-        login(userType);
-        navigate(`/dashboard/${userType}`);
-      } else {
-        setError(data.error || "Invalid OTP.");
-        toast.error(data.error || "Invalid OTP.");
-      }
-    } catch (err) {
-      const msg = "An error occurred during verification.";
+    if (password !== confirmPassword) {
+      const msg = "Passwords do not match";
       setError(msg);
       toast.error(msg);
-    } finally {
-      setIsLoading(false);
+      return;
     }
+    login(userType);
+    navigate(`/dashboard/${userType}`);
   };
+
 
   const onTabChange = () => {
     setEmail("");
     setPassword("");
     setConfirmPassword("");
     setError("");
-    setOtp("");
-    setOtpSent(false);
-    setIsVerified(false);
   };
 
   const UserTypeSelector = ({
@@ -236,7 +150,7 @@ const Auth: React.FC = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <UserTypeSelector formType="login" disabled={otpSent} />
+              <UserTypeSelector formType="login" />
               <div className="space-y-2">
                 <Label htmlFor="email-login">Email</Label>
                 <Input
@@ -245,7 +159,6 @@ const Auth: React.FC = () => {
                   placeholder="email@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  disabled={otpSent}
                 />
               </div>
               <div className="space-y-2">
@@ -255,57 +168,19 @@ const Auth: React.FC = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  disabled={otpSent}
                 />
               </div>
-              {otpSent && !isVerified && (
-                <div className="space-y-2">
-                  <Label htmlFor="otp-login">Enter OTP</Label>
-                  <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
-                    </InputOTPGroup>
-                    <InputOTPSeparator />
-                    <InputOTPGroup>
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
-                    </InputOTPGroup>
-                  </InputOTP>
-                  <Button
-                    variant="link"
-                    onClick={(e) => handleResendOtp(e, "login")}
-                    className="p-0"
-                    disabled={isLoading}
-                  >
-                    Resend OTP
-                  </Button>
-                </div>
-              )}
               {error && (
                 <p className="text-red-400 text-sm text-center">{error}</p>
               )}
             </CardContent>
             <CardFooter>
-              {!otpSent ? (
-                <Button
-                  onClick={(e) => handleSendOtp(e, "login")}
-                  className="w-full"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Sending..." : "Send OTP"}
-                </Button>
-              ) : (
-                <Button
-                  onClick={(e) => handleVerify(e, "login")}
-                  className="w-full"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Verifying..." : "Verify & Login"}
-                </Button>
-              )}
+              <Button
+                onClick={handleLogin}
+                className="w-full"
+              >
+                Login
+              </Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -325,7 +200,7 @@ const Auth: React.FC = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <UserTypeSelector formType="signup" disabled={otpSent} />
+              <UserTypeSelector formType="signup" />
               <div className="space-y-2">
                 <Label htmlFor="email-signup">Email</Label>
                 <Input
@@ -334,7 +209,6 @@ const Auth: React.FC = () => {
                   placeholder="email@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  disabled={otpSent}
                 />
               </div>
               <div className="space-y-2">
@@ -344,7 +218,6 @@ const Auth: React.FC = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  disabled={otpSent}
                 />
                 <PasswordStrength password={password} />
               </div>
@@ -357,57 +230,19 @@ const Auth: React.FC = () => {
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  disabled={otpSent}
                 />
               </div>
-              {otpSent && !isVerified && (
-                <div className="space-y-2">
-                  <Label htmlFor="otp-signup">Enter OTP</Label>
-                  <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
-                    </InputOTPGroup>
-                    <InputOTPSeparator />
-                    <InputOTPGroup>
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
-                    </InputOTPGroup>
-                  </InputOTP>
-                  <Button
-                    variant="link"
-                    onClick={(e) => handleResendOtp(e, "signup")}
-                    className="p-0"
-                    disabled={isLoading}
-                  >
-                    Resend OTP
-                  </Button>
-                </div>
-              )}
               {error && (
                 <p className="text-red-400 text-sm text-center">{error}</p>
               )}
             </CardContent>
             <CardFooter>
-              {!otpSent ? (
-                <Button
-                  onClick={(e) => handleSendOtp(e, "signup")}
-                  className="w-full"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Sending..." : "Sign Up & Verify"}
-                </Button>
-              ) : (
-                <Button
-                  onClick={(e) => handleVerify(e, "signup")}
-                  className="w-full"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Verifying..." : "Verify & Create Account"}
-                </Button>
-              )}
+              <Button
+                onClick={handleSignup}
+                className="w-full"
+              >
+                Sign Up
+              </Button>
             </CardFooter>
           </Card>
         </TabsContent>

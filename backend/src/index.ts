@@ -10,7 +10,6 @@ import crypto from 'crypto';
 import { connectDB } from './db';
 import Song from './models/song';
 import Rating from './models/rating';
-import OTP from './models/otp';
 import { sendOTPEmail } from './email';
 
 const app = express();
@@ -50,47 +49,6 @@ app.get('/api/songs', asyncHandler(async (req: Request, res: Response) => {
     tags: song.tags,
   }));
   res.json(formattedSongs);
-}));
-
-app.post('/api/request-otp', asyncHandler(async (req: Request, res: Response) => {
-  const { email } = req.body;
-  if (!email) {
-    return res.status(400).json({ error: 'Email is required' });
-  }
-
-  const otp = crypto.randomInt(100000, 1000000).toString();
-  await OTP.findOneAndUpdate({ email }, { otp }, { upsert: true, new: true });
-
-  if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-    try {
-      await sendOTPEmail(email, otp);
-      res.status(200).json({ message: 'OTP has been sent to your email.' });
-    } catch (error) {
-      console.error('Failed to send OTP email. Falling back to console logging.');
-      console.log(`OTP for ${email}: ${otp}`);
-      res.status(500).json({ message: 'Could not send OTP email. Please check server logs for the OTP.', otp });
-    }
-  } else {
-    console.log('EMAIL_USER or EMAIL_PASS not set in .env. Logging OTP to console.');
-    console.log(`OTP for ${email}: ${otp}`);
-    res.status(200).json({ message: 'OTP has been logged to the console (email credentials not configured).', otp });
-  }
-}));
-
-app.post('/api/verify-otp', asyncHandler(async (req: Request, res: Response) => {
-  const { email, otp } = req.body;
-  if (!email || !otp) {
-    return res.status(400).json({ error: 'Email and OTP are required' });
-  }
-
-  const otpRecord = await OTP.findOne({ email });
-
-  if (otpRecord && otpRecord.otp === otp) {
-    await OTP.deleteOne({ email });
-    res.status(200).json({ message: 'Login successful' });
-  } else {
-    res.status(400).json({ error: 'Invalid OTP or OTP has expired' });
-  }
 }));
 
 app.post('/api/recommend', asyncHandler(async (req: Request, res: Response) => {
