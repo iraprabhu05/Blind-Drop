@@ -21,15 +21,17 @@ import { toast } from "sonner";
 
 const Auth: React.FC = () => {
   const [userType, setUserType] = useState<"user" | "artist">("user");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { login } = useAuth();
+  const { login, register, userType: authUserType } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -39,15 +41,26 @@ const Auth: React.FC = () => {
       toast.error(msg);
       return;
     }
-    login(userType);
-    navigate(`/dashboard/${userType}`);
+
+    setIsSubmitting(true);
+    try {
+      await login(email, password);
+      toast.success("Welcome back!");
+      navigate("/dashboard/user");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Login failed";
+      setError(msg);
+      toast.error(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (!email || !password || !confirmPassword) {
+    if (!username || !email || !password || !confirmPassword) {
       const msg = "Please fill in all fields";
       setError(msg);
       toast.error(msg);
@@ -59,12 +72,23 @@ const Auth: React.FC = () => {
       toast.error(msg);
       return;
     }
-    login(userType);
-    navigate(`/dashboard/${userType}`);
+
+    setIsSubmitting(true);
+    try {
+      await register(username, email, password, userType);
+      toast.success("Account created!");
+      navigate(`/dashboard/${userType}`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Sign up failed";
+      setError(msg);
+      toast.error(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-
   const onTabChange = () => {
+    setUsername("");
     setEmail("");
     setPassword("");
     setConfirmPassword("");
@@ -178,8 +202,9 @@ const Auth: React.FC = () => {
               <Button
                 onClick={handleLogin}
                 className="w-full"
+                disabled={isSubmitting}
               >
-                Login
+                {isSubmitting ? "Logging in..." : "Login"}
               </Button>
             </CardFooter>
           </Card>
@@ -201,6 +226,16 @@ const Auth: React.FC = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <UserTypeSelector formType="signup" />
+              <div className="space-y-2">
+                <Label htmlFor="username-signup">Username</Label>
+                <Input
+                  id="username-signup"
+                  type="text"
+                  placeholder="your_username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="email-signup">Email</Label>
                 <Input
@@ -240,8 +275,9 @@ const Auth: React.FC = () => {
               <Button
                 onClick={handleSignup}
                 className="w-full"
+                disabled={isSubmitting}
               >
-                Sign Up
+                {isSubmitting ? "Creating account..." : "Sign Up"}
               </Button>
             </CardFooter>
           </Card>

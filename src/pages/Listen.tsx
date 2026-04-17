@@ -3,78 +3,117 @@ import {
   Play,
   Pause,
   SkipForward,
-  Star,
-  Eye,
   AlertCircle,
-  Zap,
+  Loader2,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Navigation } from "@/components/Navigation";
 import { Particles } from "@/components/Particles";
 import { cn } from "@/lib/utils";
-import { songs } from "../utils/songs";
-import { getSmartRecommendation } from "../utils/aiService";
+import { songsApi, ratingApi, recommendApi, SafeSong } from "@/lib/api";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
+const SCORE_COLORS: Record<number, string> = {
+  1: "#60a5fa", 2: "#60a5fa",
+  3: "#34d399", 4: "#34d399",
+  5: "#fbbf24", 6: "#fbbf24",
+  7: "#f4845f", 8: "#f4845f",
+  9: "#f43f5e", 10: "#f43f5e",
+};
 
 const Listen = () => {
-  // STATE
+  const navigate = useNavigate();
+
+  // Song state
+  const [songs, setSongs] = useState<SafeSong[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [loadingSongs, setLoadingSongs] = useState(true);
+
+  // Player state
   const [isPlaying, setIsPlaying] = useState(false);
-  const [rating, setRating] = useState(0);
-  const [hoveredRating, setHoveredRating] = useState(0);
-  const [currentSong, setCurrentSong] = useState(songs[0]);
-  const [isRevealed, setIsRevealed] = useState(false);
-
-  const [aiMessage, setAiMessage] = useState<string | null>(null);
-
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [audioError, setAudioError] = useState(false);
+  const [loadingAudio, setLoadingAudio] = useState(false);
 
-  const audioRef = useRef<HTMLAudioElement>(new Audio(songs[0].audio));
+  // Rating state
+  const [selectedScore, setSelectedScore] = useState<number | null>(null);
+  const [hoveredScore, setHoveredScore] = useState<number | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [listenedEnough, setListenedEnough] = useState(false);
 
-  // HELPERS
-  const formatTime = (time: number) => {
-    if (isNaN(time)) return "0:00";
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
-  };
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // AUTO HIDE AI MESSAGE
+  const currentSong = songs[currentIndex] ?? null;
+
+  // Load songs from API on mount
   useEffect(() => {
-    if (!aiMessage) return;
-    const timer = setTimeout(() => setAiMessage(null), 3000);
-    return () => clearTimeout(timer);
-  }, [aiMessage]);
+    songsApi.getAll()
+      .then((data) => {
+        setSongs(data);
+        setLoadingSongs(false);
+      })
+      .catch(() => {
+        toast.error("Failed to load songs");
+        setLoadingSongs(false);
+      });
+  }, []);
 
-  // AUDIO EVENTS
+  // Load audio whenever the current song changes
   useEffect(() => {
-    const audio = audioRef.current;
+    if (!currentSong) return;
 
-    const updateTime = () => setCurrentTime(audio.currentTime);
-    const updateDuration = () => setDuration(audio.duration);
-    const handleEnded = () => setIsPlaying(false);
-    const handleError = () => {
-      setAudioError(true);
-      setIsPlaying(false);
+    setAudioError(false);
+    setIsPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
+    setSelectedScore(null);
+    setListenedEnough(false);
+    setLoadingAudio(true);
+
+    const audio = new Audio();
+    audioRef.current = audio;
+
+    songsApi.stream(currentSong.id)
+      .then(({ audioUrl }) => {
+        audio.src = audioUrl;
+        audio.load();
+        setLoadingAudio(false);
+      })
+      .catch(() => {
+        setAudioError(true);
+        setLoadingAudio(false);
+      });
+
+    const onTime = () => {
+      setCurrentTime(audio.currentTime);
+      if (audio.currentTime >= 30 || (audio.duration && audio.currentTime / audio.duration >= 0.3)) {
+        setListenedEnough(true);
+      }
     };
+    const onDuration = () => setDuration(audio.duration);
+    const onEnded = () => { setIsPlaying(false); setListenedEnough(true); };
+    const onError = () => { setAudioError(true); setIsPlaying(false); };
 
-    audio.addEventListener("timeupdate", updateTime);
-    audio.addEventListener("loadedmetadata", updateDuration);
-    audio.addEventListener("ended", handleEnded);
-    audio.addEventListener("error", handleError);
+    audio.addEventListener("timeupdate", onTime);
+    audio.addEventListener("loadedmetadata", onDuration);
+    audio.addEventListener("ended", onEnded);
+    audio.addEventListener("error", onError);
 
     return () => {
       audio.pause();
-      audio.removeEventListener("timeupdate", updateTime);
-      audio.removeEventListener("loadedmetadata", updateDuration);
-      audio.removeEventListener("ended", handleEnded);
-      audio.removeEventListener("error", handleError);
+      audio.removeEventListener("timeupdate", onTime);
+      audio.removeEventListener("loadedmetadata", onDuration);
+      audio.removeEventListener("ended", onEnded);
+      audio.removeEventListener("error", onError);
     };
-  }, []);
+  }, [currentSong?.id]);
 
-  // PLAY / PAUSE
+  // Sync play/pause
   useEffect(() => {
+    if (!audioRef.current) return;
     if (isPlaying) {
       audioRef.current.play().catch(() => setIsPlaying(false));
     } else {
@@ -82,65 +121,70 @@ const Listen = () => {
     }
   }, [isPlaying]);
 
-  // SONG CHANGE
-  useEffect(() => {
-    audioRef.current.pause();
-    audioRef.current = new Audio(currentSong.audio);
-
-    audioRef.current.addEventListener("timeupdate", () =>
-      setCurrentTime(audioRef.current.currentTime),
-    );
-    audioRef.current.addEventListener("loadedmetadata", () =>
-      setDuration(audioRef.current.duration),
-    );
-    audioRef.current.addEventListener("error", () => setAudioError(true));
-
-    setRating(0);
-    setHoveredRating(0);
-    setIsRevealed(false);
-    setAudioError(false);
-    setCurrentTime(0);
-
-    if (isPlaying) {
-      audioRef.current.play().catch(() => {});
-    }
-  }, [currentSong]);
-
-  // HANDLERS
-  const handleRate = async (star: number) => {
-    setRating(star);
-    setIsRevealed(true);
-
-    if (star >= 4) {
-      try {
-        const nextSong = await getSmartRecommendation(currentSong);
-
-        // 👇 BLIND-SAFE AI MESSAGE
-        const messageOptions = [
-          "AI thinks you’ll like this vibe",
-          "Next up: similar energy and genre",
-          "Queued something with a matching feel",
-          "Based on your rating, this should hit",
-        ];
-
-        setAiMessage(
-          messageOptions[Math.floor(Math.random() * messageOptions.length)],
-        );
-
-        setCurrentSong(nextSong);
-        setIsPlaying(true);
-      } catch {
-        setAiMessage("AI skipped ahead to a similar track");
-        handleSkip();
-      }
-    }
+  const formatTime = (t: number) => {
+    if (isNaN(t) || !isFinite(t)) return "0:00";
+    const m = Math.floor(t / 60);
+    const s = Math.floor(t % 60);
+    return `${m}:${s < 10 ? "0" + s : s}`;
   };
 
-  const handleSkip = () => {
-    const idx = songs.findIndex((s) => s.id === currentSong.id);
-    setCurrentSong(songs[(idx + 1) % songs.length]);
+  const handleSkip = async () => {
+    if (!currentSong) return;
+    try {
+      const next = await recommendApi.get(currentSong.id, selectedScore ?? 0);
+      if (next) {
+        const idx = songs.findIndex((s) => s.id === next.id);
+        if (idx !== -1) {
+          setCurrentIndex(idx);
+          setIsPlaying(true);
+          return;
+        }
+        setSongs((prev) => [...prev, next]);
+        setCurrentIndex(songs.length);
+      } else {
+        setCurrentIndex((i) => (i + 1) % songs.length);
+      }
+    } catch {
+      setCurrentIndex((i) => (i + 1) % songs.length);
+    }
     setIsPlaying(true);
   };
+
+  const handleSubmitRating = async () => {
+    if (!currentSong || selectedScore === null || submitting) return;
+    setSubmitting(true);
+    try {
+      await ratingApi.submit(currentSong.id, selectedScore);
+      navigate(`/reveal/${currentSong.id}`, { state: { score: selectedScore } });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Rating failed";
+      if (msg.includes("Authentication")) {
+        toast.error("Please sign in to rate tracks");
+        navigate("/auth");
+      } else {
+        toast.error(msg);
+      }
+      setSubmitting(false);
+    }
+  };
+
+  const activeScore = hoveredScore ?? selectedScore;
+
+  if (loadingSongs) {
+    return (
+      <div className="h-screen w-full bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-neon-violet" />
+      </div>
+    );
+  }
+
+  if (!currentSong) {
+    return (
+      <div className="h-screen w-full bg-background flex items-center justify-center text-muted-foreground">
+        No tracks available
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen w-full bg-background overflow-hidden relative flex flex-col">
@@ -157,33 +201,15 @@ const Listen = () => {
           Blind Listening Mode
         </span>
 
-        {/* AI MESSAGE */}
-        {aiMessage && (
-          <div className="animate-in zoom-in duration-300">
-            <div className="px-4 py-2 rounded-xl bg-neon-teal text-black font-ui text-sm shadow-xl">
-              <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4" />
-                {aiMessage}
-              </div>
-            </div>
+        {/* GENRE BADGE */}
+        <div className="text-center">
+          <span className="px-3 py-1 rounded-full text-xs font-ui bg-neon-violet/20 text-neon-violet border border-neon-violet/30">
+            {currentSong.genre}
+          </span>
+          <div className="mt-2 text-center text-muted-foreground blur-sm select-none">
+            <h2 className="text-2xl font-bold">Hidden Track</h2>
+            <p>Rate to reveal the artist</p>
           </div>
-        )}
-
-        {/* SONG */}
-        <div className="h-16 flex items-center justify-center">
-          {isRevealed ? (
-            <div className="text-center">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-neon-violet to-neon-teal bg-clip-text text-transparent">
-                {currentSong.title}
-              </h2>
-              <p className="text-lg text-white">{currentSong.artist}</p>
-            </div>
-          ) : (
-            <div className="text-center text-muted-foreground blur-sm">
-              <h2 className="text-2xl font-bold">Hidden Track</h2>
-              <p>Rate to reveal</p>
-            </div>
-          )}
         </div>
 
         {/* PLAYER */}
@@ -191,13 +217,19 @@ const Listen = () => {
           {audioError && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 rounded-full text-red-500 text-xs">
               <AlertCircle className="w-6 h-6 mb-2" />
-              Audio error
+              Audio unavailable
+            </div>
+          )}
+          {loadingAudio && !audioError && (
+            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40">
+              <Loader2 className="w-8 h-8 animate-spin text-neon-violet" />
             </div>
           )}
 
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="absolute inset-[20%] rounded-full glass-panel flex items-center justify-center"
+            disabled={loadingAudio || audioError}
+            className="absolute inset-[20%] rounded-full glass-panel flex items-center justify-center disabled:opacity-40"
           >
             {isPlaying ? (
               <Pause className="w-16 h-16 text-white" />
@@ -211,10 +243,8 @@ const Listen = () => {
         <div className="w-full">
           <div className="h-1 bg-gray-800 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-neon-violet to-neon-teal"
-              style={{
-                width: `${duration ? (currentTime / duration) * 100 : 0}%`,
-              }}
+              className="h-full bg-gradient-to-r from-neon-violet to-neon-teal transition-all"
+              style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
             />
           </div>
           <div className="flex justify-between text-xs text-muted-foreground mt-1">
@@ -223,25 +253,38 @@ const Listen = () => {
           </div>
         </div>
 
-        {/* RATING */}
-        <div className="flex gap-1">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              onClick={() => handleRate(star)}
-              onMouseEnter={() => setHoveredRating(star)}
-              onMouseLeave={() => setHoveredRating(0)}
-            >
-              <Star
+        {/* RATING 1-10 */}
+        <div className="w-full">
+          {!listenedEnough && (
+            <p className="text-center text-xs text-muted-foreground mb-2">
+              Listen for 30s to unlock rating
+            </p>
+          )}
+          <div className="flex gap-1 justify-center flex-wrap">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((score) => (
+              <button
+                key={score}
+                disabled={!listenedEnough}
+                onClick={() => setSelectedScore(score)}
+                onMouseEnter={() => setHoveredScore(score)}
+                onMouseLeave={() => setHoveredScore(null)}
+                style={{
+                  borderColor: (activeScore ?? 0) >= score ? SCORE_COLORS[score] : undefined,
+                  color: (activeScore ?? 0) >= score ? SCORE_COLORS[score] : undefined,
+                  backgroundColor: selectedScore === score ? `${SCORE_COLORS[score]}20` : undefined,
+                }}
                 className={cn(
-                  "w-8 h-8",
-                  (hoveredRating || rating) >= star
-                    ? "fill-neon-violet text-neon-violet"
-                    : "text-muted-foreground/20",
+                  "w-9 h-9 rounded-lg border text-sm font-bold transition-all duration-150",
+                  listenedEnough
+                    ? "border-muted-foreground/20 text-muted-foreground hover:scale-110"
+                    : "border-muted-foreground/10 text-muted-foreground/30 cursor-not-allowed",
+                  selectedScore === score && "scale-110",
                 )}
-              />
-            </button>
-          ))}
+              >
+                {score}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* CONTROLS */}
@@ -250,11 +293,21 @@ const Listen = () => {
             <SkipForward className="w-4 h-4 mr-2" />
             Skip
           </Button>
-          <Button size="sm" onClick={() => setIsRevealed(true)}>
-            <Eye className="w-4 h-4 mr-2" />
-            Reveal
+          <Button
+            size="sm"
+            disabled={selectedScore === null || submitting || !listenedEnough}
+            onClick={handleSubmitRating}
+          >
+            {submitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+            {submitting ? "Submitting..." : "Rate & Reveal"}
           </Button>
         </div>
+
+        {currentSong.ratingCount > 0 && (
+          <p className="text-xs text-muted-foreground">
+            Community avg: <strong>{currentSong.avgRating.toFixed(1)}</strong> from {currentSong.ratingCount} ratings
+          </p>
+        )}
       </main>
     </div>
   );

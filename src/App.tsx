@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 import Index from "./pages/Index";
 import Discover from "./pages/Discover";
 import Artists from "./pages/Artists";
@@ -23,19 +24,28 @@ import LoadingScreen from "./components/LoadingScreen";
 const queryClient = new QueryClient();
 
 const AppRoutes = () => {
-  const { isLoggedIn, userType } = useAuth();
+  const { isLoggedIn, userType, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="h-screen w-full bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-neon-violet" />
+      </div>
+    );
+  }
 
   return (
     <Routes>
       <Route
         path="/"
         element={
-          isLoggedIn ? <Navigate to={`/dashboard/${userType}`} /> : <Index />
+          isLoggedIn ? <Navigate to={`/dashboard/${userType === "artist" ? "artist" : "user"}`} /> : <Index />
         }
       />
       <Route path="/discover" element={<Discover />} />
       <Route path="/artists" element={<Artists />} />
       <Route path="/listen" element={<Listen />} />
+      <Route path="/reveal/:songId" element={<Reveal />} />
       <Route path="/reveal" element={<Reveal />} />
       <Route path="/upload" element={<Upload />} />
       <Route path="/profile" element={<Profile />} />

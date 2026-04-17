@@ -7,6 +7,12 @@ export interface ISong extends Document {
   artist: string;
   audio: string;
   tags: string[];
+  genre: string;
+  albumArtUrl: string;
+  isPublished: boolean;
+  avgRating: number;
+  ratingCount: number;
+  uploadedBy?: string; // userId of uploader (artist)
 }
 
 // Mongoose schema for the Song model
@@ -31,6 +37,30 @@ const SongSchema: Schema = new Schema({
   tags: {
     type: [String],
     required: true
+  },
+  genre: {
+    type: String,
+    default: 'Other'
+  },
+  albumArtUrl: {
+    type: String,
+    default: ''
+  },
+  isPublished: {
+    type: Boolean,
+    default: true
+  },
+  avgRating: {
+    type: Number,
+    default: 0
+  },
+  ratingCount: {
+    type: Number,
+    default: 0
+  },
+  uploadedBy: {
+    type: String,
+    default: null
   }
 });
 
