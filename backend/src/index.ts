@@ -8,10 +8,11 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import session from 'express-session';
 import bcrypt from 'bcryptjs';
+import rateLimit from 'express-rate-limit';
 import { connectDB } from './db';
 import Song from './models/song';
 import Rating from './models/rating';
-import User, { IUser } from './models/user';
+import User from './models/user';
 
 // Extend express-session types
 declare module 'express-session' {
@@ -20,6 +21,8 @@ declare module 'express-session' {
     userRole: string;
   }
 }
+
+const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 const app = express();
 
@@ -38,9 +41,28 @@ app.use(session({
   cookie: {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    sameSite: 'strict',
+    maxAge: SESSION_DURATION_MS,
   },
 }));
+
+// ─── RATE LIMITERS ────────────────────────────────────────────────────────────
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later' },
+});
+
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later' },
+});
 
 // Middleware for logging requests
 app.use((req, res, next) => {
@@ -79,8 +101,11 @@ const port = process.env.PORT || 3000;
 
 // ─── AUTH ROUTES ──────────────────────────────────────────────────────────────
 
-app.post('/api/auth/register', asyncHandler(async (req: Request, res: Response) => {
-  const { username, email, password, role } = req.body;
+app.post('/api/auth/register', authLimiter, asyncHandler(async (req: Request, res: Response) => {
+  const username = String(req.body.username ?? '').trim();
+  const email = String(req.body.email ?? '').trim().toLowerCase();
+  const password = String(req.body.password ?? '');
+  const { role } = req.body;
 
   if (!username || !email || !password) {
     return res.status(400).json({ error: 'username, email, and password are required' });
@@ -88,6 +113,11 @@ app.post('/api/auth/register', asyncHandler(async (req: Request, res: Response) 
 
   if (password.length < 6) {
     return res.status(400).json({ error: 'Password must be at least 6 characters' });
+  }
+
+  // Basic email format validation
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: 'Invalid email format' });
   }
 
   const allowedRoles = ['user', 'artist'];
@@ -101,7 +131,7 @@ app.post('/api/auth/register', asyncHandler(async (req: Request, res: Response) 
   const passwordHash = await bcrypt.hash(password, 10);
   const user = await new User({ username, email, passwordHash, role: userRole }).save();
 
-  req.session.userId = (user._id as any).toString();
+  req.session.userId = String(user._id);
   req.session.userRole = userRole;
 
   res.status(201).json({
@@ -113,8 +143,9 @@ app.post('/api/auth/register', asyncHandler(async (req: Request, res: Response) 
   });
 }));
 
-app.post('/api/auth/login', asyncHandler(async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+app.post('/api/auth/login', authLimiter, asyncHandler(async (req: Request, res: Response) => {
+  const email = String(req.body.email ?? '').trim().toLowerCase();
+  const password = String(req.body.password ?? '');
 
   if (!email || !password) {
     return res.status(400).json({ error: 'email and password are required' });
@@ -130,7 +161,7 @@ app.post('/api/auth/login', asyncHandler(async (req: Request, res: Response) => 
     return res.status(401).json({ error: 'Invalid email or password' });
   }
 
-  req.session.userId = (user._id as any).toString();
+  req.session.userId = String(user._id);
   req.session.userRole = user.role;
 
   res.json({
@@ -173,9 +204,9 @@ app.get('/api/auth/me', asyncHandler(async (req: Request, res: Response) => {
 // ─── SONG ROUTES (BLIND SAFE) ─────────────────────────────────────────────────
 
 // Returns ONLY safe fields — no artist, no title, no audio
-app.get('/api/songs', asyncHandler(async (req: Request, res: Response) => {
-  const { genre } = req.query;
-  const filter: Record<string, any> = { isPublished: true };
+app.get('/api/songs', apiLimiter, asyncHandler(async (req: Request, res: Response) => {
+  const genre = typeof req.query.genre === 'string' ? req.query.genre : undefined;
+  const filter: Record<string, unknown> = { isPublished: true };
   if (genre && genre !== 'All') {
     filter.genre = genre;
   }
@@ -192,8 +223,8 @@ app.get('/api/songs', asyncHandler(async (req: Request, res: Response) => {
 }));
 
 // Returns audio URL for playback — blind safe (no artist)
-app.get('/api/songs/:id/stream', requireAuth, asyncHandler(async (req: Request, res: Response) => {
-  const songId = parseInt(req.params.id);
+app.get('/api/songs/:id/stream', apiLimiter, requireAuth, asyncHandler(async (req: Request, res: Response) => {
+  const songId = parseInt(req.params.id, 10);
   if (isNaN(songId)) return res.status(400).json({ error: 'Invalid song id' });
 
   const song = await Song.findOne({ id: songId, isPublished: true }).select('id audio');
@@ -204,7 +235,7 @@ app.get('/api/songs/:id/stream', requireAuth, asyncHandler(async (req: Request, 
 
 // ─── RATING ───────────────────────────────────────────────────────────────────
 
-app.post('/api/rate', requireAuth, asyncHandler(async (req: Request, res: Response) => {
+app.post('/api/rate', apiLimiter, requireAuth, asyncHandler(async (req: Request, res: Response) => {
   const { songId, rating } = req.body;
   const userId = req.session.userId!;
 
@@ -212,12 +243,12 @@ app.post('/api/rate', requireAuth, asyncHandler(async (req: Request, res: Respon
     return res.status(400).json({ error: 'songId and rating are required' });
   }
 
-  const score = parseInt(String(rating));
+  const score = parseInt(String(rating), 10);
   if (isNaN(score) || score < 1 || score > 10) {
     return res.status(400).json({ error: 'rating must be an integer between 1 and 10' });
   }
 
-  const song = await Song.findOne({ id: parseInt(String(songId)), isPublished: true });
+  const song = await Song.findOne({ id: parseInt(String(songId), 10), isPublished: true });
   if (!song) return res.status(404).json({ error: 'Song not found' });
 
   // Idempotent: check if already rated
@@ -230,7 +261,9 @@ app.post('/api/rate', requireAuth, asyncHandler(async (req: Request, res: Respon
 
   // Update song aggregate stats
   const allRatings = await Rating.find({ songId: song.id });
-  const avg = allRatings.reduce((sum, r) => sum + r.rating, 0) / allRatings.length;
+  const avg = allRatings.length > 0
+    ? allRatings.reduce((sum, r) => sum + r.rating, 0) / allRatings.length
+    : 0;
   await Song.findOneAndUpdate(
     { id: song.id },
     { avgRating: Math.round(avg * 100) / 100, ratingCount: allRatings.length }
@@ -242,8 +275,8 @@ app.post('/api/rate', requireAuth, asyncHandler(async (req: Request, res: Respon
 // ─── REVEAL (server-side gate) ────────────────────────────────────────────────
 
 // Only returns full metadata if the authenticated user has already rated this song
-app.get('/api/reveal/:id', requireAuth, asyncHandler(async (req: Request, res: Response) => {
-  const songId = parseInt(req.params.id);
+app.get('/api/reveal/:id', apiLimiter, requireAuth, asyncHandler(async (req: Request, res: Response) => {
+  const songId = parseInt(req.params.id, 10);
   const userId = req.session.userId!;
 
   if (isNaN(songId)) return res.status(400).json({ error: 'Invalid song id' });
@@ -271,15 +304,12 @@ app.get('/api/reveal/:id', requireAuth, asyncHandler(async (req: Request, res: R
 
 // ─── RECOMMENDATION ───────────────────────────────────────────────────────────
 
-app.post('/api/recommend', asyncHandler(async (req: Request, res: Response) => {
-  const { songId, rating } = req.body;
+app.post('/api/recommend', apiLimiter, asyncHandler(async (req: Request, res: Response) => {
+  const songId = parseInt(String(req.body.songId ?? ''), 10);
+  const rating = Number(req.body.rating);
 
-  if (songId === undefined || rating === undefined) {
+  if (isNaN(songId) || isNaN(rating)) {
     return res.status(400).json({ error: 'songId and rating are required' });
-  }
-
-  if (typeof rating !== 'number') {
-    return res.status(400).json({ error: 'rating must be a number' });
   }
 
   if (rating < 4) {
@@ -298,7 +328,8 @@ app.post('/api/recommend', asyncHandler(async (req: Request, res: Response) => {
   });
 
   if (!recommendedSong) {
-    recommendedSong = await Song.findOne({ id: { $ne: originalSong.id }, isPublished: true }).sort({ title: 1 });
+    // Use avgRating desc as a better fallback than alphabetical sort
+    recommendedSong = await Song.findOne({ id: { $ne: originalSong.id }, isPublished: true }).sort({ avgRating: -1 });
   }
 
   if (recommendedSong) {
@@ -317,8 +348,11 @@ app.post('/api/recommend', asyncHandler(async (req: Request, res: Response) => {
 
 // ─── UPLOAD ───────────────────────────────────────────────────────────────────
 
-app.post('/api/upload', requireArtistOrAdmin, asyncHandler(async (req: Request, res: Response) => {
-  const { title, artist, audio, tags, genre, albumArtUrl } = req.body;
+app.post('/api/upload', apiLimiter, requireArtistOrAdmin, asyncHandler(async (req: Request, res: Response) => {
+  const title = String(req.body.title ?? '').trim();
+  const artist = String(req.body.artist ?? '').trim();
+  const audio = String(req.body.audio ?? '').trim();
+  const { tags, genre, albumArtUrl } = req.body;
   const userId = req.session.userId!;
 
   if (!title || !artist || !audio) {
@@ -333,7 +367,7 @@ app.post('/api/upload', requireArtistOrAdmin, asyncHandler(async (req: Request, 
     title,
     artist,
     audio,
-    tags: tags || [],
+    tags: Array.isArray(tags) ? tags : [],
     genre: genre || 'Other',
     albumArtUrl: albumArtUrl || '',
     isPublished: false,
@@ -350,7 +384,7 @@ app.post('/api/upload', requireArtistOrAdmin, asyncHandler(async (req: Request, 
 
 // ─── USER PROFILE ─────────────────────────────────────────────────────────────
 
-app.get('/api/profile', requireAuth, asyncHandler(async (req: Request, res: Response) => {
+app.get('/api/profile', apiLimiter, requireAuth, asyncHandler(async (req: Request, res: Response) => {
   const userId = req.session.userId!;
 
   const user = await User.findById(userId).select('-passwordHash');

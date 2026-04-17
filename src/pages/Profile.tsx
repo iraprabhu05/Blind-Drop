@@ -53,7 +53,7 @@ const Profile = () => {
   const stats = data?.stats;
   const ratedSongs = data?.ratedSongs ?? [];
 
-  const initials = profile?.username?.slice(0, 2).toUpperCase() ?? "??";
+  const initials = Array.from(profile?.username ?? '').slice(0, 2).join('').toUpperCase() || '??';
 
   const statsCards = [
     { icon: Headphones, value: String(stats?.totalRated ?? 0), label: "Tracks Rated" },

@@ -25,7 +25,7 @@ const Reveal = () => {
       return;
     }
 
-    revealApi.get(parseInt(songId))
+    revealApi.get(parseInt(songId, 10))
       .then((d) => {
         setData(d);
         setLoading(false);
