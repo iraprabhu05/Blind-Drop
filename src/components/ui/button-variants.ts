@@ -19,6 +19,8 @@ export const buttonVariants = cva(
         ghost_neon:
           "border border-primary/30 bg-transparent text-foreground hover:border-primary/60 hover:shadow-[0_0_40px_hsl(var(--primary)/0.4)] backdrop-blur-sm",
         hero: "relative px-8 py-4 text-lg bg-gradient-to-r from-primary to-secondary text-primary-foreground font-semibold shadow-[0_0_60px_hsl(var(--primary)/0.3),0_0_100px_hsl(var(--secondary)/0.2)] hover:shadow-[0_0_80px_hsl(var(--primary)/0.5),0_0_140px_hsl(var(--secondary)/0.4)] hover:scale-105 active:scale-100",
+        "glow-animated":
+          "btn-glow relative bg-gradient-to-r from-primary to-secondary text-primary-foreground font-semibold",
       },
       size: {
         default: "h-11 px-6 py-2",
